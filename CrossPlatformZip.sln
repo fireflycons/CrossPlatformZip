@@ -3,7 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossPlatformZip", "CrossPlatformZip\CrossPlatformZip.csproj", "{D6D3132A-F847-4F94-A776-F7D66E7B3321}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{12D664CB-5926-408E-8A5A-7AEB1FC8045B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip", "src\Firefly.CrossPlatformZip\Firefly.CrossPlatformZip.csproj", "{93482484-F7E8-4A6F-A54D-5E17F0A237EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DF330BCD-1099-4F46-9301-DBC96E8C1EDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip.Tests.Unit", "tests\Firefly.CrossPlatformZip.Tests.Unit\Firefly.CrossPlatformZip.Tests.Unit.csproj", "{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{13439F9D-E52C-4618-93AC-2929E0BB7AC2}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.cake = build\build.cake
+		build\build.ps1 = build\build.ps1
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firefly.CrossPlatformZip.Console", "src\Firefly.CrossPlatformZip.Console\Firefly.CrossPlatformZip.Console.csproj", "{FBDB72C2-3D57-451E-8699-5174E9B27B31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +25,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D6D3132A-F847-4F94-A776-F7D66E7B3321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6D3132A-F847-4F94-A776-F7D66E7B3321}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6D3132A-F847-4F94-A776-F7D66E7B3321}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6D3132A-F847-4F94-A776-F7D66E7B3321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93482484-F7E8-4A6F-A54D-5E17F0A237EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93482484-F7E8-4A6F-A54D-5E17F0A237EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93482484-F7E8-4A6F-A54D-5E17F0A237EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93482484-F7E8-4A6F-A54D-5E17F0A237EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBDB72C2-3D57-451E-8699-5174E9B27B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBDB72C2-3D57-451E-8699-5174E9B27B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBDB72C2-3D57-451E-8699-5174E9B27B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBDB72C2-3D57-451E-8699-5174E9B27B31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{93482484-F7E8-4A6F-A54D-5E17F0A237EA} = {12D664CB-5926-408E-8A5A-7AEB1FC8045B}
+		{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC} = {DF330BCD-1099-4F46-9301-DBC96E8C1EDA}
+		{FBDB72C2-3D57-451E-8699-5174E9B27B31} = {12D664CB-5926-408E-8A5A-7AEB1FC8045B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {256AA9B2-CFA1-4529-ADA8-07DA7088831B}
