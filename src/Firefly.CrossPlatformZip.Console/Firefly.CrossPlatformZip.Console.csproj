@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.0;net472</TargetFrameworks>
+    <TargetFrameworks Condition="'$(windir)' != ''">netcoreapp2.0;net472</TargetFrameworks>
+    <TargetFramework Condition="'$(windir)' == ''">netcoreapp2.0</TargetFramework>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
