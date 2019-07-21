@@ -5,9 +5,14 @@ environment:
   NuGetApiKey:
     secure: ZwF65Rl156oMAenHhi8BAY0LySWhhjDvNNt91dpU7D5N88E8ToZyZHCziktv7sz3
 
+# Skip on updates to the readme.
+# We can force this by adding [skip ci] or [ci skip] anywhere in commit message
+skip_commits:
+  message: /NO_CI.*|updated readme.*|update readme.*s/
+
 image:
   - Visual Studio 2017
-#  - Ubuntu
+  - Ubuntu
 
 #for:
 #-
@@ -23,10 +28,8 @@ image:
 #    - ps: ./New-NetCoreManifest.ps1
 #    - mv ./aws-toolbox ./aws-toolbox.netcore
 
-# Skip on updates to the readme.
-# We can force this by adding [skip ci] or [ci skip] anywhere in commit message
-skip_commits:
-  message: /NO_CI.*|updated readme.*|update readme.*s/
+
+configuration: Release
 
 before_build:
   - dotnet restore
