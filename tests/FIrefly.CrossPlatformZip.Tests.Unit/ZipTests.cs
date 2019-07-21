@@ -145,6 +145,11 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             }
         }
 
+        /// <summary>
+        /// Gets all entries from zip central directory.
+        /// </summary>
+        /// <param name="zipFile">The zip file.</param>
+        /// <returns>Number of entries in central directory.</returns>
         private IEnumerable<string> GetAllEntries(string zipFile)
         {
             using (var archive = ZipFile.Open(zipFile, ZipArchiveMode.Read))

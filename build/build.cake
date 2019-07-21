@@ -9,7 +9,7 @@ var sourceRoot = Directory("../src");
 
 var buildOutputDir = Directory("../output");
 var artifactsDir = buildOutputDir + Directory("artifacts");
-var testDir =  Directory("../tests/CrossPlatformZip.Tests.Unit");
+var testDir =  Directory("../tests/Firefly.CrossPlatformZip.Tests.Unit");
 var testResultsDir =   MakeAbsolute(testDir + Directory("TestResults"));
 var coverageResultsDir = MakeAbsolute(testDir + Directory("CoverageResults"));
 var appBundleZip = File("bundle.zip");
