@@ -28,6 +28,9 @@ image:
 skip_commits:
   message: /NO_CI.*|updated readme.*|update readme.*s/
 
+before_build:
+  - dotnet restore
+
 build:
   parallel: true                  # enable MSBuild parallel builds
   project: CrossPlatformZip.sln      # path to Visual Studio solution or project
