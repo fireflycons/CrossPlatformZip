@@ -11,8 +11,11 @@ skip_commits:
   message: /NO_CI.*|updated readme.*|update readme.*s/
 
 image:
-  - Visual Studio 2017
   - Ubuntu
+  - Visual Studio 2017
+
+matrix:
+  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
 
 #for:
 #-
@@ -32,6 +35,7 @@ image:
 configuration: Release
 
 before_build:
+  - ps: Get-ChildItem -Filter *.csproj -Recurse | Select-Object -ExpandProperty FullName
   - dotnet restore
 
 build:
