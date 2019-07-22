@@ -4,7 +4,7 @@ using Cake.Powershell;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var buildNumber = Argument("buildNumber", 0);
+var buildNumber = Argument<string>("buildNumber", "0");
 
 var solution = File("../CrossPlatformZip.sln");
 var buildDir = Directory(".");
@@ -27,6 +27,9 @@ This package provides a mechanism to create or extract ZIP files for operating s
 Specifically, handling path sepatator characters in the zip central directory and setting of attributes for achives targeting Unix-like O/S.
 Solves problems such as an archive conatining Windows path separators will not extract correctly on Linux.
 ";
+
+var mc = System.Text.RegularExpressions.Regex.Match(buildNumber, @"(?<bn>\d+)$");
+var actualBuildNumber = mc.Groups["bn"].Value;
 
 Task("Package")
     .Does(() =>
