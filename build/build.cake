@@ -4,12 +4,9 @@ using Cake.Powershell;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var buildNumber = Argument<string>("buildNumber", "0");
 
-var solution = File("../CrossPlatformZip.sln");
-var buildDir = Directory(".");
-var deployDir = Directory("../Deploy");
-var sourceRoot = Directory("../src");
+var buildNumber = EnvironmentVariableOrDefault("APPVEYOR_BUILD_NUMBER", "0");
+
 
 var buildOutputDir = Directory("../output");
 var artifactsDir = buildOutputDir + Directory("artifacts");
@@ -54,12 +51,13 @@ Task("Package")
 
 Task("Publish")
     .WithCriteria(!string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_JOB_ID")))
+    .IsDependentOn("Package")
     .Does(() => {
 
         var isTag = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_REPO_TAG")) && bool.Parse(EnvironmentVariable("APPVEYOR_REPO_TAG"));
 
         // Push AppVeyor artifact
-        foreach(var package in GetFiles("../**/*.nupkg"))
+        foreach(var package in GetFiles($"../**/{packageId}*.nupkg"))
         {
             Information($"Pushing {package} as AppVeyor artifact");
 
@@ -84,3 +82,10 @@ Task("Default")
     .IsDependentOn("Publish");
 
 RunTarget(target);
+
+string EnvironmentVariableOrDefault(string name, string defaultValue)
+{
+    var val = EnvironmentVariable(name);
+
+    return val == null ? defaultValue : val;
+}
