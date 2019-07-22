@@ -22,7 +22,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// What OS is the running on?
         /// </summary>
-        private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        private static readonly bool IsWindows = Path.DirectorySeparatorChar == '\\';
 
         /// <summary>
         /// Test that if a zip is created for a foreign platform e.g. Windows and unzipped on Linux (and vice versa depending on where test is run)

@@ -17,7 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{13439F9D
 		build\build.ps1 = build\build.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Firefly.CrossPlatformZip.Console", "src\Firefly.CrossPlatformZip.Console\Firefly.CrossPlatformZip.Console.csproj", "{FBDB72C2-3D57-451E-8699-5174E9B27B31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip.Console", "src\Firefly.CrossPlatformZip.Console\Firefly.CrossPlatformZip.Console.csproj", "{FBDB72C2-3D57-451E-8699-5174E9B27B31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".SolutionItems", ".SolutionItems", "{EF63A015-7DC7-4FC7-8C02-590F9C780180}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

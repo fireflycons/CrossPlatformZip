@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(windir)' != ''">netcoreapp2.0;net472</TargetFrameworks>
+    <TargetFrameworks Condition="'$(windir)' != ''">netcoreapp2.0;net472;net46</TargetFrameworks>
     <TargetFramework Condition="'$(windir)' == ''">netcoreapp2.0</TargetFramework>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DefineConstants Condition="'$(TargetFramework)' != 'net46'">HAVE_UNIX_ATTR;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
