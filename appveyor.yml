@@ -29,7 +29,7 @@ for:
 configuration: Release
 
 before_build:
-  - ps: Get-Module -ListAvailable
+  - ps: "Get-Command Push-AppveyorArtifact | select Source, Module, ModuleName, Version"
   - dotnet restore
 
 build:
