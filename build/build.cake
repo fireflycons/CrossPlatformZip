@@ -31,11 +31,9 @@ var actualBuildNumber = mc.Groups["bn"].Value;
 Task("Package")
     .Does(() =>
 {
-    EnsureDirectoryExists(artifactsDir);
     var nuGetPackSettings = new NuGetPackSettings
     {
         Id = packageId,
-        OutputDirectory = artifactsDir,
         Version = $"{packageVersion}.{buildNumber}",
         Copyright = packageCopyright,
         Title = packageTitle,

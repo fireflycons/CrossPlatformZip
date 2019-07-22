@@ -14,12 +14,12 @@
     <tags>archive,zip,crossplatform</tags>
   </metadata>
   <files>
-    <file src="../../output/netcoreapp2.0/Firefly.CrossPlatformZip.dll" target="lib/netcoreapp2.0" />
-    <file src="../../output/netcoreapp2.0/Firefly.CrossPlatformZip.pdb" target="lib/netcoreapp2.0" />
-    <file src="../../output/netcoreapp2.0/Firefly.CrossPlatformZip.deps.json" target="lib/netcoreapp2.0" />
-    <file src="../../output/net472/Firefly.CrossPlatformZip.dll" target="lib/net472" />
-    <file src="../../output/net472/Firefly.CrossPlatformZip.pdb" target="lib/net472" />
-    <file src="../../output/net46/Firefly.CrossPlatformZip.dll" target="lib/net46" />
-    <file src="../../output/net46/Firefly.CrossPlatformZip.pdb" target="lib/net46" />
+    <file src="bin/Release/netcoreapp2.0/Firefly.CrossPlatformZip.dll" target="lib/netcoreapp2.0" />
+    <file src="bin/Release/netcoreapp2.0/Firefly.CrossPlatformZip.pdb" target="lib/netcoreapp2.0" />
+    <file src="bin/Release/netcoreapp2.0/Firefly.CrossPlatformZip.deps.json" target="lib/netcoreapp2.0" />
+    <file src="bin/Release/net472/Firefly.CrossPlatformZip.dll" target="lib/net472" />
+    <file src="bin/Release/net472/Firefly.CrossPlatformZip.pdb" target="lib/net472" />
+    <file src="bin/Release/net46/Firefly.CrossPlatformZip.dll" target="lib/net46" />
+    <file src="bin/Release/net46/Firefly.CrossPlatformZip.pdb" target="lib/net46" />
   </files>
 </package>
