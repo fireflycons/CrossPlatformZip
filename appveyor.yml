@@ -11,7 +11,7 @@ skip_commits:
   message: /NO_CI.*|updated readme.*|update readme.*s/
 
 image:
-  - Ubuntu
+#  - Ubuntu
   - Visual Studio 2017
 
 matrix:
@@ -29,7 +29,7 @@ for:
 configuration: Release
 
 before_build:
-  - ps: Get-ChildItem -Filter *.csproj -Recurse | Select-Object -ExpandProperty FullName
+  - ps: Get-Module -ListAvailable
   - dotnet restore
 
 build:
