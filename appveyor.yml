@@ -41,3 +41,7 @@ test:
   assemblies:
     only:
       - '**\*.Tests.Unit.dll'
+
+after_test:
+  - ps: "Write-Host 'publish'"
+  - ps: ./build/publish.ps1 -buildNumber=$env:APPVEYOR_BUILD_NUMBER
