@@ -82,6 +82,7 @@ function MD5HashFile([string] $filePath)
 try
 {
     Write-Host "Preparing to run build script..."
+	Push-Location $PSScriptRoot
 
     Write-Host "Checking operating system..."
     $IsWindowsOS = (-not (Get-Variable -Name IsWindows -ErrorAction Ignore)) -or $IsWindows
@@ -365,4 +366,8 @@ catch
     Write-Host "Exception Thrown: $($_.Exception.Message)"
     Write-Host $_.ScriptStackTrace
     exit 1
+}
+finally
+{
+	Pop-Location
 }
