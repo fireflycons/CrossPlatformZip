@@ -17,6 +17,7 @@ image:
 before_build:
   - ps:  . ./build/Set-BuildNumbers.ps1
   - ps: Get-ChildItem -Path env:APPVEYOR*
+  - ps: Get-ChildItem -Path env:LOCAL*
   - dotnet restore
 
 matrix:
