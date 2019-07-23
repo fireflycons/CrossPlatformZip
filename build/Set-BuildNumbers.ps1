@@ -14,7 +14,7 @@ if ($version)
 {
     $localBuildNumber = $version.Build.ToString()
     $localBuildVersion = $version.ToString()
-    $localAssemblyVersion = "$(version.ToString(2)).0.0"
+    $localAssemblyVersion = "$($version.ToString(2)).0.0"
 }
 
 Set-AppveyorBuildVariable -Name LOCAL_BUILD_NUMBER -Value $localBuildNumber
