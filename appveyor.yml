@@ -15,7 +15,7 @@ image:
   - Visual Studio 2017
 
 before_build:
-  - ps:  ./build/build-helper.ps1 -Target SetBuildNumbers
+  - ps:  . ./build/Set-BuildNumbers.ps1
   - ps: Get-ChildItem -Path env:APPVEYOR*
   - dotnet restore
 
