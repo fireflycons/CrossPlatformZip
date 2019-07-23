@@ -14,6 +14,12 @@ image:
 #  - Ubuntu
   - Visual Studio 2017
 
+init:
+  - ps:  Get-ChildItem -Path env:APPVEYOR*
+
+before_build:
+  - dotnet restore
+
 matrix:
   fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
 
@@ -23,14 +29,10 @@ for:
     only:
       - image: Visual Studio 2017
   after_test:
-    - ps: ./build/publish.ps1 -buildNumber=$env:APPVEYOR_BUILD_NUMBER
+    - ps: ./build/publish.ps1
 
 
 configuration: Release
-
-before_build:
-  - ps: "Get-Command Push-AppveyorArtifact | select Source, Module, ModuleName, Version"
-  - dotnet restore
 
 build:
   parallel: true                  # enable MSBuild parallel builds
@@ -43,4 +45,4 @@ test:
       - '**\*.Tests.Unit.dll'
 
 after_test:
-  - ps: ./build/publish.ps1 -ScriptArgs '-buildNumber=$env:APPVEYOR_BUILD_NUMBER'
+  - ps: ./build/publish.ps1
