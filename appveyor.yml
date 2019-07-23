@@ -14,7 +14,7 @@ image:
 #  - Ubuntu
   - Visual Studio 2017
 
-before_build:
+install:
   - ps:  . ./build/Set-BuildNumbers.ps1
   - ps: Get-ChildItem -Path env:APPVEYOR*
   - ps: Get-ChildItem -Path env:LOCAL*
@@ -23,10 +23,10 @@ before_build:
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '$(LOCAL_BUILD_VERSION)'
-  package_version: '{LOCAL_BUILD_VERSION}'
-  assembly_version: '$(LOCAL_ASSEMBLY_VERSION)'
-  file_version: '$(LOCAL_BUILD_VERSION)'
+  version: $(LOCAL_BUILD_VERSION)
+  package_version: $(LOCAL_BUILD_VERSION)
+  assembly_version: $(LOCAL_ASSEMBLY_VERSION)
+  file_version: $(LOCAL_BUILD_VERSION)
 
 matrix:
   fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
@@ -41,6 +41,7 @@ for:
 
 
 configuration: Release
+
 
 build:
   parallel: true                  # enable MSBuild parallel builds
