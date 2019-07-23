@@ -14,11 +14,9 @@ image:
 #  - Ubuntu
   - Visual Studio 2017
 
-init:
+before_build:
   - ps:  ./build/build-helper.ps1 -Target SetBuildNumbers
   - ps: Get-ChildItem -Path env:APPVEYOR*
-
-before_build:
   - dotnet restore
 
 matrix:
