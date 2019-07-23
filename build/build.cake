@@ -1,5 +1,7 @@
 #addin nuget:?package=Cake.PowerShell&version=0.4.8
 
+using System.Text;
+using System.Text.RegularExpressions;
 using Cake.Powershell;
 
 var target = Argument("target", "Default");
@@ -25,7 +27,7 @@ Specifically, handling path sepatator characters in the zip central directory an
 Solves problems such as an archive conatining Windows path separators will not extract correctly on Linux.
 ";
 
-var mc = System.Text.RegularExpressions.Regex.Match(buildNumber, @"(?<bn>\d+)$");
+var mc = Regex.Match(buildNumber, @"(?<bn>\d+)$");
 var actualBuildNumber = mc.Groups["bn"].Value;
 
 Task("Package")
@@ -48,11 +50,11 @@ Task("Package")
 });
 
 Task("Publish")
-    .WithCriteria(!string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_JOB_ID")))
+    .WithCriteria(!string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR")))
     .IsDependentOn("Package")
     .Does(() => {
 
-        var isTag = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_REPO_TAG")) && bool.Parse(EnvironmentVariable("APPVEYOR_REPO_TAG"));
+        var isTagPush = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_REPO_TAG")) && bool.Parse(EnvironmentVariable("APPVEYOR_REPO_TAG"));
 
         // Push AppVeyor artifact
         foreach(var package in GetFiles($"../**/{packageId}*.nupkg"))
@@ -76,6 +78,39 @@ Task("Publish")
         }
     });
 
+Task("SetBuildNumbers")
+    .WithCriteria(!string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR")))
+    .Does(() => {
+
+        var version = BuildVersionFromRepoTagName();
+        var localBuildNumber = EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
+        var localBuildVersion = $"0.0.{localBuildNumber}";
+        var localAssemblyVersion = "0.0.0.0";
+
+        if (version != null)
+        {
+            localBuildNumber = version.Build.ToString();
+            localBuildVersion = version.ToString();
+            localAssemblyVersion = $"{version.ToString(2)}.0.0";
+        }
+
+        var sb = new StringBuilder();
+
+        sb.AppendLine($"Set-AppveyorBuildVariable -Name LOCAL_BUILD_NUMBER -Value {localBuildNumber}")
+            .AppendLine($"Set-AppveyorBuildVariable -Name LOCAL_BUILD_VERSION -Value {localBuildVersion}")
+            .AppendLine($"Set-AppveyorBuildVariable -Name LOCAL_ASSEMBLY_VERSION -Value {localAssemblyVersion}");
+
+        StartPowershellScript(sb.ToString(), new PowershellSettings
+            {
+                Modules = new List<string> {
+                    "build-worker-api"
+                },
+
+                FormatOutput = true,
+                LogOutput = true
+            });
+    });
+
 Task("Default")
     .IsDependentOn("Publish");
 
@@ -86,4 +121,18 @@ string EnvironmentVariableOrDefault(string name, string defaultValue)
     var val = EnvironmentVariable(name);
 
     return val == null ? defaultValue : val;
+}
+
+Version BuildVersionFromRepoTagName()
+{
+    var tag = EnvironmentVariable("APPVEYOR_REPO_TAG_NAME");
+
+    if (tag == null)
+    {
+        return null;
+    }
+
+    var m = Regex.Match(tag, @"^v(?<version>\d+\.\d+\.\d+)$", RegexOptions.IgnoreCase);
+
+    return m.Success ? new Version(m.Groups["version"].Value) : null;
 }

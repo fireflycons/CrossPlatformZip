@@ -1,6 +1,6 @@
 # See http://www.appveyor.com/docs/appveyor-yml for many more options
 
-#Publish to Nuget Gallery with this key
+# publish to Nuget Gallery with this key
 environment:
   NUGET_API_KEY:
     secure: Y6RtiPHso3IP4m2v+l+33xkxpiAsE7ZdmZZZzBf99ScIPEECURKw0nwxZGUhaj1L
@@ -15,7 +15,8 @@ image:
   - Visual Studio 2017
 
 init:
-  - ps:  Get-ChildItem -Path env:APPVEYOR*
+  - ps:  ./build/build-helper.ps1 -Target SetBuildNumbers
+  - ps: Get-ChildItem -Path env:APPVEYOR*
 
 before_build:
   - dotnet restore
@@ -29,7 +30,7 @@ for:
     only:
       - image: Visual Studio 2017
   after_test:
-    - ps: ./build/publish.ps1
+    - ps: ./build/build-helper.ps1 -Target Publish
 
 
 configuration: Release
@@ -45,4 +46,4 @@ test:
       - '**\*.Tests.Unit.dll'
 
 after_test:
-  - ps: ./build/publish.ps1
+  - ps: ./build/build-helper.ps1 -Target Publish
