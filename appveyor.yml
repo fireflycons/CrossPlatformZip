@@ -20,14 +20,6 @@ install:
   - ps: Get-ChildItem -Path env:LOCAL*
   - dotnet restore
 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: $(LOCAL_BUILD_VERSION)
-  package_version: $(LOCAL_BUILD_VERSION)
-  assembly_version: $(LOCAL_ASSEMBLY_VERSION)
-  file_version: $(LOCAL_BUILD_VERSION)
-
 before_build:
   - ps: ./build/build-helper.ps1 -Target SetVersion
 
