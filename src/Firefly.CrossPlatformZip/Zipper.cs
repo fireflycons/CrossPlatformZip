@@ -15,7 +15,7 @@
         /// <summary>
         ///     What OS is the running on?
         /// </summary>
-        private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        private static readonly bool IsWindows = Path.DirectorySeparatorChar == '\\';
 
         /// <summary>
         /// Unzip a zip file, treating paths appropriately for the file system irrespective of path style in central directory.
@@ -306,13 +306,13 @@
             }
 
             var entry = archive.CreateEntry(zipPath);
-
+#if HAVE_UNIX_ATTR
             if (targetPlatform == ZipPlatform.Unix)
             {
                 // Set rwxrwxrwx
                 entry.ExternalAttributes = 0x1ff << 16;
             }
-
+#endif
             if (!isDirectory)
             {
                 // Add the file

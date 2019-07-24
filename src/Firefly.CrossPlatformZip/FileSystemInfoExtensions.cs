@@ -30,18 +30,19 @@
             var fromPath = GetPath(from);
             var toPath = GetPath(to);
 
-            var fromUri = new Uri(fromPath);
-            var toUri = new Uri(toPath);
+            var fromUri = new Uri($"file://{fromPath}");
+            var toUri = new Uri($"file://{toPath}");
 
             var relativeUri = fromUri.MakeRelativeUri(toUri);
             var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 
             return relativePath.Replace('/', Path.DirectorySeparatorChar);
         }
+
         private static string GetPath(FileSystemInfo fsi)
         {
             var d = fsi as DirectoryInfo;
-            return d == null ? fsi.FullName : d.FullName.TrimEnd('\\', '/') + "\\";
+            return d == null ? fsi.FullName : d.FullName.TrimEnd('\\', '/') + Path.DirectorySeparatorChar;
         }
 
     }

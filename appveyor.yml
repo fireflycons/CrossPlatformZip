@@ -1,0 +1,48 @@
+# See http://www.appveyor.com/docs/appveyor-yml for many more options
+
+# publish to Nuget Gallery with this key
+environment:
+  NUGET_API_KEY:
+    secure: Y6RtiPHso3IP4m2v+l+33xkxpiAsE7ZdmZZZzBf99ScIPEECURKw0nwxZGUhaj1L
+
+# Skip on updates to the readme.
+# We can force this by adding [skip ci] or [ci skip] anywhere in commit message
+skip_commits:
+  message: /NO_CI.*|updated readme.*|update readme.*s/
+
+image:
+  - Ubuntu
+  - Visual Studio 2017
+
+install:
+  - ps:  . ./build/Set-BuildNumbers.ps1
+  - dotnet restore
+
+before_build:
+  - ps: ./build/build-helper.ps1 -Target SetVersion
+
+matrix:
+  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2017
+  after_test:
+    - ps: ./build/build-helper.ps1 -Target Publish
+
+
+configuration: Release
+
+
+build:
+  parallel: true                  # enable MSBuild parallel builds
+  project: CrossPlatformZip.sln      # path to Visual Studio solution or project
+
+test:
+  # only assemblies to test
+  assemblies:
+    only:
+      - '**\*.Tests.Unit.dll'
+
