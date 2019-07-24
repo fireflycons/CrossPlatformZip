@@ -11,6 +11,7 @@
     <summary>Cross platform ZIP/UNZIP package that can create/unzip archives for Windows or Unix/Linux</summary>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://github.com/fireflycons/CrossPlatformZip</projectUrl>
+    <license type="expression">MIT</license>
     <tags>archive,zip,crossplatform</tags>
   </metadata>
   <files>
