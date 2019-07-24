@@ -7,8 +7,9 @@ using Cake.Powershell;
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var buildNumber = EnvironmentVariableOrDefault("LOCAL_BUILD_NUMBER", "0");
-
+var buildNumber = int.Parse(EnvironmentVariableOrDefault("LOCAL_BUILD_NUMBER", "0"));
+var assemblyVersion = EnvironmentVariableOrDefault("LOCAL_ASSEMBLY_VERSION", "1.0.0.0");
+var fileVersion = $"{EnvironmentVariableOrDefault("LOCAL_BUILD_VERSION", "1.0.0")}.0";
 
 var buildOutputDir = Directory("../output");
 var artifactsDir = buildOutputDir + Directory("artifacts");
@@ -20,7 +21,7 @@ var appBundleZip = File("bundle.zip");
 var packageId = "Firefly.CrossPlatformZip";
 var packageVersion = EnvironmentVariableOrDefault("LOCAL_BUILD_VERSION", "0.0.0");
 var packageTitle = "Cross Platfom ZIP module";
-var packageCopyright = $"Copyright (c) Firefly Consulting Ltd. {DateTime.Now.Year}";
+var packageCopyright = $"Copyright © Firefly Consulting Ltd. {DateTime.Now.Year}";
 var packageDescription = @"
 This package provides a mechanism to create or extract ZIP files for operating systems other than that on which you run this code.
 Specifically, handling path sepatator characters in the zip central directory and setting of attributes for achives targeting Unix-like O/S.
@@ -28,6 +29,7 @@ Solves problems such as an archive conatining Windows path separators will not e
 ";
 
 Task("Package")
+    .WithCriteria(!string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR")))
     .Does(() =>
 {
     var nuGetPackSettings = new NuGetPackSettings
@@ -46,7 +48,7 @@ Task("Package")
     NuGetPack($"../src/{packageId}/package.nuspec", nuGetPackSettings);
 });
 
-Task("Publish")
+Task("Push")
     .WithCriteria(!string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR")))
     .IsDependentOn("Package")
     .Does(() => {
@@ -74,6 +76,32 @@ Task("Publish")
             );
         }
     });
+
+
+Task("CreateAssemblyInfo")
+    .WithCriteria(buildNumber > 0)
+    .Does(() =>
+{
+    var assemblyInfoFiles = GetFiles("../**/AssemblyInfo.cs");
+    foreach (var assemblyInfoFile in assemblyInfoFiles)
+    {
+        CreateAssemblyInfo(assemblyInfoFile, new AssemblyInfoSettings {
+            Company = "Firefly Consulting Ltd.",
+            ComVisible = false,
+            Configuration = configuration,
+            Copyright = packageCopyright,
+            FileVersion = fileVersion,
+            Product = packageId,
+            Version = assemblyVersion
+            });
+    }
+});
+
+Task("SetVersion")
+    .IsDependentOn("CreateAssemblyInfo");
+
+Task("Publish")
+    .IsDependentOn("Push");
 
 Task("Default")
     .IsDependentOn("Publish");
