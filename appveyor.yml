@@ -11,13 +11,11 @@ skip_commits:
   message: /NO_CI.*|updated readme.*|update readme.*s/
 
 image:
-#  - Ubuntu
+  - Ubuntu
   - Visual Studio 2017
 
 install:
   - ps:  . ./build/Set-BuildNumbers.ps1
-  - ps: Get-ChildItem -Path env:APPVEYOR*
-  - ps: Get-ChildItem -Path env:LOCAL*
   - dotnet restore
 
 before_build:
@@ -48,5 +46,3 @@ test:
     only:
       - '**\*.Tests.Unit.dll'
 
-after_test:
-  - ps: ./build/build-helper.ps1 -Target Publish
