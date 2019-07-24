@@ -53,10 +53,11 @@ Task("Push")
     .IsDependentOn("Package")
     .Does(() => {
 
-        var isTagPush = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_REPO_TAG")) && bool.Parse(EnvironmentVariable("APPVEYOR_REPO_TAG"));
+        var pushToNuget = !string.IsNullOrEmpty(EnvironmentVariable("APPVEYOR_REPO_TAG")) && bool.Parse(EnvironmentVariable("APPVEYOR_REPO_TAG")) && EnvironmentVariable("APPVEYOR_REPO_BRANCH") == "master";
+        var packages = GetFiles($"../**/{packageId}*.nupkg");
 
         // Push AppVeyor artifact
-        foreach(var package in GetFiles($"../**/{packageId}*.nupkg"))
+        foreach(var package in packages)
         {
             Information($"Pushing {package} as AppVeyor artifact");
 
@@ -74,6 +75,25 @@ Task("Push")
                     args.AppendQuoted(package.ToString());
                 })
             );
+        }
+
+        if (pushToNuget)
+        {
+            foreach(var package in packages)
+            {
+                Information($"Pushing {package} to nuget.org");
+
+                NuGetPush(package, new NuGetPushSettings {
+                        Source = "https://api.nuget.org/v3/index.json",
+                        ApiKey = EnvironmentVariable("NUGET_API_KEY")
+                    });
+            }
+        }
+        else
+        {
+            Information("Not pushing to nuget.org because one or more of the following is false:");
+            Information("- Commit is on master branch");
+            Information("- Commit is a tag push");
         }
     });
 
