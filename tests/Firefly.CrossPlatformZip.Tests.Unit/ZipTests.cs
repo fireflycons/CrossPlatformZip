@@ -23,50 +23,15 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// Given a directory, assert that all files and directories within are added with unix paths.
         /// </summary>
         [TestMethod]
-        public void
-            GivenADirectory_AndWeDontSpecifyTheTargetOperatingSystem_ThenAllPathsWithinZipAreForTheCurrentOperatingSystem()
-        {
-            var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
-
-            using (var zipFile = new TempFile("test.zip"))
-            {
-                Zipper.Zip(zipFile, directoryToZip);
-
-                this.GetAllEntries(zipFile)
-                    .All(e => e.Contains(Path.DirectorySeparatorChar) || e.IndexOfAny(new[] { '\\', '/' }) == -1)
-                    .Should().BeTrue();
-            }
-        }
-
-        /// <summary>
-        /// Given a directory, assert that all files and directories within are added with unix paths.
-        /// </summary>
-        [TestMethod]
         public void GivenADirectory_AndWeExplicityWantToCreateUnixArchive_ThenAllPathsWithinZipAreUnix()
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, directoryToZip, ZipPlatform.Unix);
+                Zipper.Zip(zipFile, directoryToZip, 9, ZipPlatform.Unix);
 
                 this.GetAllEntries(zipFile).Any(e => e.Contains("\\")).Should().BeFalse();
-            }
-        }
-
-        /// <summary>
-        /// Given a directory, assert that all files and directories within are added with unix paths.
-        /// </summary>
-        [TestMethod]
-        public void GivenADirectory_AndWeExplicityWantToCreateWindowsArchive_ThenAllPathsWithinZipAreWindows()
-        {
-            var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
-
-            using (var zipFile = new TempFile("test.zip"))
-            {
-                Zipper.Zip(zipFile, directoryToZip, ZipPlatform.Windows);
-
-                this.GetAllEntries(zipFile).Any(e => e.Contains("/")).Should().BeFalse();
             }
         }
 
@@ -82,14 +47,14 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, directoryToZip);
+                Zipper.Zip(zipFile, directoryToZip, 9);
 
                 this.GetEntryCount(zipFile).Should().Be(expectedEntryCount);
             }
         }
 
         /// <summary>
-        /// Given a single file and using <see cref="Zipper.Zip(string,string)"/> method then it is added at the root of the central directory.
+        /// Given a single file and using <see cref="Zipper.Zip(string,string, int)"/> method then it is added at the root of the central directory.
         /// </summary>
         [TestMethod]
         public void GivenASingleFile_AndUsingZipMethod_ThenItIsAddedAtTheRootOfTheCentralDirectory()
@@ -99,7 +64,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, fileToZip, ZipPlatform.Unix);
+                Zipper.Zip(zipFile, fileToZip, 9, ZipPlatform.Unix);
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
@@ -107,7 +72,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         }
 
         /// <summary>
-        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string)"/> method with the alternate name argument = <c>null</c>
+        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string,int)"/> method with the alternate name argument = <c>null</c>
         /// then it is added at the root of the central directory.
         /// </summary>
         [TestMethod]
@@ -118,7 +83,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.ZipSingleFile(zipFile, fileToZip, null);
+                Zipper.ZipSingleFile(zipFile, fileToZip, null, 9);
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
@@ -126,7 +91,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         }
 
         /// <summary>
-        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string)"/> method with the alternate name argument not <c>null</c>
+        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string,int)"/> method with the alternate name argument not <c>null</c>
         /// then it is added at the root of the central directory with the alternate filename.
         /// </summary>
         [TestMethod]
@@ -138,7 +103,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.ZipSingleFile(zipFile, fileToZip, expectedEntry);
+                Zipper.ZipSingleFile(zipFile, fileToZip, expectedEntry, 9);
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
@@ -154,7 +119,8 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         {
             using (var archive = ZipFile.Open(zipFile, ZipArchiveMode.Read))
             {
-                return archive.Entries.Select(e => e.FullName).ToList();
+                var entryNames = archive.Entries.Select(e => e.FullName).ToList();
+                return entryNames;
             }
         }
 

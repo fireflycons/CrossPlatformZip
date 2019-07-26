@@ -21,11 +21,11 @@
                 {
                     var target = (ZipPlatform)Enum.Parse(typeof(ZipPlatform), args[2], true);
 
-                    Zipper.Zip(zipFile, path, target);
+                    Zipper.Zip(zipFile, path, 9, target);
                 }
                 else
                 {
-                    Zipper.Zip(zipFile, path);
+                    Zipper.Zip(zipFile, path, 9);
                 }
             }
             catch (Exception e)
