@@ -3,9 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.IO.Compression;
     using System.Linq;
-    using System.Runtime.InteropServices;
+
+    using ICSharpCode.SharpZipLib.Core;
+    using ICSharpCode.SharpZipLib.Zip;
 
     /// <summary>
     ///     Cross platform zip utility
@@ -33,6 +34,11 @@
         /// </exception>
         public static void Unzip(string zipFile, string directory)
         {
+            if (!File.Exists(zipFile))
+            {
+                throw new FileNotFoundException("Cannot find zip file", zipFile);
+            }
+
             if (string.IsNullOrWhiteSpace(directory))
             {
                 throw new ArgumentException("Value cannot be null or empty", nameof(directory));
@@ -48,16 +54,20 @@
                 Directory.CreateDirectory(directory);
             }
 
-            using (var archive = ZipFile.Open(zipFile, ZipArchiveMode.Read))
+            using (var archive = new ZipInputStream(File.OpenRead(zipFile)))
             {
-                foreach (var entry in archive.Entries)
+                const int BufSize = 4096;
+                var buffer = new byte[BufSize];
+                ZipEntry entry;
+
+                while ((entry = archive.GetNextEntry()) != null)
                 {
                     // Convert entry path to that expected by local file system.
                     var targetPath = Path.Combine(
                         directory,
-                        IsWindows ? entry.FullName.Replace('/', '\\') : entry.FullName.Replace('\\', '/'));
+                        IsWindows ? entry.Name.Replace('/', '\\') : entry.Name.Replace('\\', '/'));
 
-                    if (IsDirectoryEntry(entry))
+                    if (entry.IsDirectory)
                     {
                         if (Environment.UserInteractive)
                         {
@@ -76,10 +86,20 @@
                             Console.WriteLine($"Extracting {Path.GetFullPath(targetPath)}");
                         }
 
-                        using (var es = entry.Open())
                         using (var fs = File.OpenWrite(targetPath))
                         {
-                            es.CopyTo(fs);
+                            while (true)
+                            {
+                                var bytesRead = archive.Read(buffer, 0, BufSize);
+
+                                if (bytesRead == 0)
+                                {
+                                    break;
+                                }
+
+                                fs.Write(buffer, 0, bytesRead);
+                            }
+
                             fs.Flush();
                         }
                     }
@@ -97,9 +117,10 @@
         /// <param name="path">
         /// The path to a file or folder to zip.
         /// </param>
-        public static void Zip(string zipFile, string path)
+        /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
+        public static void Zip(string zipFile, string path, int compressionLevel)
         {
-            Zip(zipFile, path, IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix);
+            Zip(zipFile, path, compressionLevel, IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix);
         }
 
         /// <summary>
@@ -111,6 +132,7 @@
         /// <param name="path">
         /// The path to a file or folder to zip.
         /// </param>
+        /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
         /// <param name="targetPlatform">
         /// The target platform.
         /// </param>
@@ -122,7 +144,7 @@
         /// <exception cref="System.IO.FileNotFoundException">
         /// No files found to zip at '{path}
         /// </exception>
-        public static void Zip(string zipFile, string path, ZipPlatform targetPlatform)
+        public static void Zip(string zipFile, string path, int compressionLevel, ZipPlatform targetPlatform)
         {
             List<FileSystemInfo> filesToZip;
             DirectoryInfo zipRoot;
@@ -270,7 +292,7 @@
         ///     name.
         /// </param>
         private static void AddSingleEntry(
-            ZipArchive archive,
+            ZipOutputStream archive,
             FileSystemInfo itemToAdd,
             DirectoryInfo zipRoot,
             ZipPlatform targetPlatform,
@@ -305,22 +327,24 @@
                 Console.WriteLine($"Adding {zipPath}");
             }
 
-            var entry = archive.CreateEntry(zipPath);
-#if HAVE_UNIX_ATTR
+            var entry = new ZipEntry(zipPath);
+
             if (targetPlatform == ZipPlatform.Unix)
             {
                 // Set rwxrwxrwx
-                entry.ExternalAttributes = 0x1ff << 16;
+                entry.ExternalFileAttributes = 0x1ff << 16;
             }
-#endif
-            if (!isDirectory)
+
+            archive.PutNextEntry(entry);
+
+            if (entry.IsFile)
             {
+                var buf = new byte[4096];
+
                 // Add the file
                 using (var fs = File.OpenRead(itemToAdd.FullName))
-                using (var es = entry.Open())
                 {
-                    fs.CopyTo(es);
-                    es.Flush();
+                    StreamUtils.Copy(fs, archive, buf);
                 }
             }
         }
@@ -349,30 +373,16 @@
         /// The target Platform.
         /// </param>
         /// <returns>
-        /// Open <see cref="ZipArchive"/>
+        /// Open <see cref="ZipOutputStream"/>
         /// </returns>
-        private static ZipArchive CreateZipFile(string zipFile, ZipPlatform targetPlatform)
+        private static ZipOutputStream CreateZipFile(string zipFile, ZipPlatform targetPlatform)
         {
             if (Environment.UserInteractive)
             {
                 Console.WriteLine($"Creating zip file '{zipFile}' with target platform {targetPlatform}");
             }
 
-            return ZipFile.Open(zipFile, ZipArchiveMode.Create);
-        }
-
-        /// <summary>
-        /// Determines whether the specified entry refers to a directory.
-        /// </summary>
-        /// <param name="entry">
-        /// The entry.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if [is directory entry] [the specified entry]; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsDirectoryEntry(ZipArchiveEntry entry)
-        {
-            return entry.FullName.EndsWith("/") || entry.FullName.EndsWith("\\");
+            return new ZipOutputStream(File.Create(zipFile));
         }
     }
 }

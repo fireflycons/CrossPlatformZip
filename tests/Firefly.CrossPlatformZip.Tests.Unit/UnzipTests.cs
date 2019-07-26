@@ -43,7 +43,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             using (var tempDir = new TempDirectory())
             {
                 // Generate zip for foreign platform
-                Zipper.Zip(zipFile, directoryToZip, IsWindows ? ZipPlatform.Unix : ZipPlatform.Windows);
+                Zipper.Zip(zipFile, directoryToZip, 9, IsWindows ? ZipPlatform.Unix : ZipPlatform.Windows);
 
                 // Now unzip it
                 // Some unzips, especially on Unix extracting zips with Windows paths get it wrong, creating files like 'dir/dir2/file.txt' rather than directory structure

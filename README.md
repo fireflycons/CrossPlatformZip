@@ -16,13 +16,9 @@ What this module does is allow you to specify when creating the zip file the _ta
 
 This module is mostly about _creating_ zip files, though an unzip method is also provided. This will create the correct pathnames for the operating system it is running on, irrespective of the path style within the zip central directory.
 
+Essentially I am providing a very lightweight wrapper around [SharpZipLib](https://github.com/icsharpcode/SharpZipLib) - thanks guys! 
+
 ## .NET Framework Support
 
-This library supports .NET Framework 4.6 (see caveats below) or greater and .NET Core 2.0 or greater.
+This library is built on netstadard2.0.
 
-## Caveats
-
-* .NET support. It was not possible to build a netstandard version as zip support is limited. It's not possible to set Unix attributes in the netstandard version of `ZipArchiveEntry`. This is promised for netstandard 3.0. This support is only available in the following...
-    * .NET Framework >= 4.7.2
-    * .NET Core 2.0
-* When the target operating system is Unix (inc Linux/MacOS), the file attributes within the zip are currently set to `rwxrwxrwx` (I may enhance this in future). No uid/gid is stored as .NET doesn't support this yet.
