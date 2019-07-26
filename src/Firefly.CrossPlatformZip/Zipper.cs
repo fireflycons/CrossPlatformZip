@@ -183,7 +183,7 @@
                 throw new FileNotFoundException($"No files found to zip at '{path}'");
             }
 
-            using (var archive = CreateZipFile(zipFile, targetPlatform))
+            using (var archive = CreateZipFile(zipFile, compressionLevel, targetPlatform))
             {
                 foreach (var fso in filesToZip)
                 {
@@ -195,7 +195,7 @@
         /// <summary>
         /// Zips a single file with optionally an alternate filename in the central directory entry.
         ///     Useful for e.g. creating a NodeJS AWS lambda package from a web packed project where the entry should be called
-        ///     index.js
+        ///     <c>index.js</c>
         /// </summary>
         /// <param name="zipFile">
         /// The zip file.
@@ -206,15 +206,21 @@
         /// <param name="alternateName">
         /// Name of entry to create in zip directory, or if <c>null</c>, use the original file name.
         /// </param>
-        public static void ZipSingleFile(string zipFile, string filePath, string alternateName)
+        /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
+        public static void ZipSingleFile(string zipFile, string filePath, string alternateName, int compressionLevel)
         {
-            ZipSingleFile(zipFile, filePath, alternateName, IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix);
+            ZipSingleFile(
+                zipFile,
+                filePath,
+                alternateName,
+                compressionLevel,
+                IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix);
         }
 
         /// <summary>
         /// Zips a single file with optionally an alternate filename in the central directory entry.
-        ///     Useful for e.g. creating a NodeJS AWS lambda package from a web packed project where the entry should be called
-        ///     index.js
+        ///     Useful for e.g. creating a Node JS AWS lambda package from a web packed project where the entry should be called
+        ///     <c>index.js</c>
         /// </summary>
         /// <param name="zipFile">
         /// The zip file.
@@ -225,6 +231,7 @@
         /// <param name="alternateName">
         /// Name of entry to create in zip directory, or if <c>null</c>, use the original file name.
         /// </param>
+        /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
         /// <param name="targetPlatform">
         /// The target platform.
         /// </param>
@@ -240,6 +247,7 @@
             string zipFile,
             string filePath,
             string alternateName,
+            int compressionLevel,
             ZipPlatform targetPlatform)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -257,11 +265,12 @@
                 throw new FileNotFoundException("File not found", filePath);
             }
 
-            using (var archive = CreateZipFile(zipFile, targetPlatform))
+            using (var archive = CreateZipFile(zipFile, compressionLevel, targetPlatform))
             {
                 AddSingleEntry(
                     archive,
                     new FileInfo(filePath),
+                    // ReSharper disable once AssignNullToNotNullAttribute - should already have been verified
                     new DirectoryInfo(Path.GetDirectoryName(filePath)),
                     targetPlatform,
                     targetPlatform == ZipPlatform.Windows ? '\\' : '/',
@@ -369,20 +378,30 @@
         /// <param name="zipFile">
         /// The zip file.
         /// </param>
+        /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
         /// <param name="targetPlatform">
         /// The target Platform.
         /// </param>
         /// <returns>
         /// Open <see cref="ZipOutputStream"/>
         /// </returns>
-        private static ZipOutputStream CreateZipFile(string zipFile, ZipPlatform targetPlatform)
+        private static ZipOutputStream CreateZipFile(string zipFile, int compressionLevel, ZipPlatform targetPlatform)
         {
-            if (Environment.UserInteractive)
+            if (compressionLevel < 0 || compressionLevel > 9)
             {
-                Console.WriteLine($"Creating zip file '{zipFile}' with target platform {targetPlatform}");
+                throw new ArgumentException("Compression level must be between 0 and 9", nameof(compressionLevel));
             }
 
-            return new ZipOutputStream(File.Create(zipFile));
+            if (Environment.UserInteractive)
+            {
+                Console.WriteLine(
+                    $"Creating zip file '{zipFile}' with target platform {targetPlatform} and compression level {compressionLevel} (9 = best)");
+            }
+
+            var stream = new ZipOutputStream(File.Create(zipFile));
+
+            stream.SetLevel(compressionLevel);
+            return stream;
         }
     }
 }

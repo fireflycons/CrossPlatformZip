@@ -72,7 +72,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         }
 
         /// <summary>
-        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string)"/> method with the alternate name argument = <c>null</c>
+        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string,int)"/> method with the alternate name argument = <c>null</c>
         /// then it is added at the root of the central directory.
         /// </summary>
         [TestMethod]
@@ -83,7 +83,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.ZipSingleFile(zipFile, fileToZip, null);
+                Zipper.ZipSingleFile(zipFile, fileToZip, null, 9);
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
@@ -91,7 +91,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         }
 
         /// <summary>
-        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string)"/> method with the alternate name argument not <c>null</c>
+        /// Given a single file and using <see cref="Zipper.ZipSingleFile(string,string,string,int)"/> method with the alternate name argument not <c>null</c>
         /// then it is added at the root of the central directory with the alternate filename.
         /// </summary>
         [TestMethod]
@@ -103,7 +103,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.ZipSingleFile(zipFile, fileToZip, expectedEntry);
+                Zipper.ZipSingleFile(zipFile, fileToZip, expectedEntry, 9);
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
