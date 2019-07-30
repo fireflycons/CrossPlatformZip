@@ -26,3 +26,6 @@ Essentially I am providing a very lightweight wrapper around [SharpZipLib](https
 
 This library is built on netstandard2.0.
 
+## Still to do
+
+Ensure central directory content matches exactly those produced by Linux zip and Windows built-in zip in terms of local header fields
