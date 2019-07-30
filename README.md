@@ -20,7 +20,7 @@ What this module does is allow you to specify when creating the zip file the _ta
 
 This module is mostly about _creating_ zip files, though an unzip method is also provided. This will create the correct pathnames for the operating system it is running on, irrespective of the path style within the zip central directory.
 
-Essentially I am providing a very lightweight wrapper around [SharpZipLib](https://github.com/icsharpcode/SharpZipLib) - thanks guys! 
+Essentially I am providing a very lightweight wrapper around [SharpZipLib](https://github.com/icsharpcode/SharpZipLib) - thanks guys!
 
 ## .NET Framework Support
 
@@ -28,4 +28,8 @@ This library is built on netstandard2.0.
 
 ## Still to do
 
-Ensure central directory content matches exactly those produced by Linux zip and Windows built-in zip in terms of local header fields
+* Ensure central directory content matches exactly those produced by Linux zip and Windows built-in zip in terms of local header fields
+* Honour extended field data
+    * Create for target OS - SharpZipLib doesn't support some unix fields.
+    * On extraction, map to target OS, i.e. Unix file times to NTFS
+* Option to store unix attributes as found in filesystem if I can find a working posix package.
