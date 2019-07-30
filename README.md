@@ -1,5 +1,9 @@
 # CrossPlatformZip
 
+[![Build status](https://ci.appveyor.com/api/projects/status/d2cpscmh141cy3wq?svg=true)](https://ci.appveyor.com/project/fireflycons/crossplatformzip)
+
+_This is pre-release software_. Expect bugs and breaking changes. It's only up on nuget because I need it as a dependency elsewhere.
+
 ## What it is
 
 I've found, especially with AWS that it can be fussy about the format of the central directory of a zip file when unzipping on a platform other than that where the zip was created. For instance, a zip file created by Windows with Windows paths (backslash) in the central directory, when unzipped on Linux with certain unzip programs which truly honour the paths with the separator character so you end up with individual _files_ in the target directory rather than the expected directory structure, e.g
@@ -20,5 +24,5 @@ Essentially I am providing a very lightweight wrapper around [SharpZipLib](https
 
 ## .NET Framework Support
 
-This library is built on netstadard2.0.
+This library is built on netstandard2.0.
 
