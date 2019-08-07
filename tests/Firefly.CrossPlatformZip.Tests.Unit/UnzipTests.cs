@@ -74,17 +74,6 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             }
         }
 
-        [TestMethod]
-        public void OpenUnixZip()
-        {
-            var zipfile = @"C:\Temp\test-unix.zip";
-
-            using (var tempdir = new TempDirectory())
-            {
-                Zipper.Unzip(zipfile, tempdir);
-            }
-        }
-
         /// <summary>
         /// Compute MD5 hash of file.
         /// </summary>
