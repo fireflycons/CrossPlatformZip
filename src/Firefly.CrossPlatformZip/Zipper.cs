@@ -5,6 +5,9 @@
     using System.IO;
     using System.Linq;
 
+    using Firefly.CrossPlatformZip.ExternalAttributes;
+    using Firefly.CrossPlatformZip.TaggedData;
+
     using ICSharpCode.SharpZipLib.Core;
     using ICSharpCode.SharpZipLib.Zip;
 
@@ -66,6 +69,14 @@
                     var targetPath = Path.Combine(
                         directory,
                         IsWindows ? entry.Name.Replace('/', '\\') : entry.Name.Replace('\\', '/'));
+
+                    if (entry.ExtraData != null && entry.ExtraData.Any())
+                    {
+                        var ed = new ZipExtraData(entry.ExtraData);
+
+                        var unixData = ed.GetData<ExtendedUnixData>();
+                        var unixUserData = ed.GetData<UnixExtraType3>();
+                    }
 
                     if (entry.IsDirectory)
                     {
@@ -148,7 +159,6 @@
         {
             List<FileSystemInfo> filesToZip;
             DirectoryInfo zipRoot;
-            var separator = targetPlatform == ZipPlatform.Windows ? '\\' : '/';
 
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -183,11 +193,13 @@
                 throw new FileNotFoundException($"No files found to zip at '{path}'");
             }
 
+            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(targetPlatform);
+
             using (var archive = CreateZipFile(zipFile, compressionLevel, targetPlatform))
             {
                 foreach (var fso in filesToZip)
                 {
-                    AddSingleEntry(archive, fso, zipRoot, targetPlatform, separator);
+                    AddSingleEntry(archive, fso, zipRoot, platformAttributes);
                 }
             }
         }
@@ -265,6 +277,8 @@
                 throw new FileNotFoundException("File not found", filePath);
             }
 
+            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(targetPlatform);
+
             using (var archive = CreateZipFile(zipFile, compressionLevel, targetPlatform))
             {
                 AddSingleEntry(
@@ -272,8 +286,7 @@
                     new FileInfo(filePath),
                     // ReSharper disable once AssignNullToNotNullAttribute - should already have been verified
                     new DirectoryInfo(Path.GetDirectoryName(filePath)),
-                    targetPlatform,
-                    targetPlatform == ZipPlatform.Windows ? '\\' : '/',
+                    platformAttributes,
                     alternateName);
             }
         }
@@ -290,11 +303,8 @@
         /// <param name="zipRoot">
         /// The zip root.
         /// </param>
-        /// <param name="targetPlatform">
+        /// <param name="platformAttributes">
         /// The target platform.
-        /// </param>
-        /// <param name="directorySeparator">
-        /// The directory separator.
         /// </param>
         /// <param name="alternateEntryName">
         /// Name of entry to create in zip directory, or if <c>null</c>, use the original file
@@ -304,8 +314,7 @@
             ZipOutputStream archive,
             FileSystemInfo itemToAdd,
             DirectoryInfo zipRoot,
-            ZipPlatform targetPlatform,
-            char directorySeparator,
+            IExternalAttributes platformAttributes,
             string alternateEntryName = null)
         {
             var isDirectory = itemToAdd is DirectoryInfo;
@@ -321,14 +330,11 @@
             }
 
             // Compute path for central directory
-            var zipPath =
-                (targetPlatform == ZipPlatform.Unix
-                     ? relative.Replace('\\', directorySeparator)
-                     : relative.Replace('/', '\\')).TrimEnd('\\', '/');
+            var zipPath = relative.Replace(platformAttributes.ForeignDirectorySeparator, platformAttributes.DirectorySeparator).TrimEnd('\\', '/');
 
             if (isDirectory)
             {
-                zipPath += directorySeparator;
+                zipPath += platformAttributes.DirectorySeparator;
             }
 
             if (Environment.UserInteractive)
@@ -336,13 +342,11 @@
                 Console.WriteLine($"Adding {zipPath}");
             }
 
-            var entry = new ZipEntry(zipPath);
-
-            if (targetPlatform == ZipPlatform.Unix)
-            {
-                // Set rwxrwxrwx
-                entry.ExternalFileAttributes = 0x1ff << 16;
-            }
+            var entry = new ZipEntry(zipPath)
+                            {
+                                ExternalFileAttributes = platformAttributes.GetExternalAttributes(itemToAdd),
+                                ExtraData = platformAttributes.GetExtraDataRecords(itemToAdd)
+                            };
 
             archive.PutNextEntry(entry);
 
