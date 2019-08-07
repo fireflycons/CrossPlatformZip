@@ -36,6 +36,22 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         }
 
         /// <summary>
+        /// Given a directory, assert that all files and directories within are added with unix paths.
+        /// </summary>
+        [TestMethod]
+        public void GivenADirectory_AndWeExplicityWantToCreateWIndowsArchive_ThenAllPathsWithinZipAreWindows()
+        {
+            var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
+
+            using (var zipFile = new TempFile("test.zip"))
+            {
+                Zipper.Zip(zipFile, directoryToZip, 9, ZipPlatform.Windows);
+
+                // this.GetAllEntries(zipFile).Any(e => e.Contains("\\")).Should().BeFalse();
+            }
+        }
+
+        /// <summary>
         /// Given a directory, assert that all files and directories within are added recursively.
         /// </summary>
         [TestMethod]
