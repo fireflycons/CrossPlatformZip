@@ -13,8 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{13439F9D-E52C-4618-93AC-2929E0BB7AC2}"
 	ProjectSection(SolutionItems) = preProject
+		build\build-helper.ps1 = build\build-helper.ps1
 		build\build.cake = build\build.cake
-		build\publish.ps1 = build\publish.ps1
+		build\Set-BuildNumbers.ps1 = build\Set-BuildNumbers.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip.Console", "src\Firefly.CrossPlatformZip.Console\Firefly.CrossPlatformZip.Console.csproj", "{FBDB72C2-3D57-451E-8699-5174E9B27B31}"
