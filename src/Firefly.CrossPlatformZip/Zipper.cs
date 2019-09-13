@@ -74,6 +74,7 @@
                     {
                         var ed = new ZipExtraData(entry.ExtraData);
 
+                        // TODO - Use this
                         var unixData = ed.GetData<ExtendedUnixData>();
                         var unixUserData = ed.GetData<UnixExtraType3>();
                     }
@@ -129,9 +130,17 @@
         /// The path to a file or folder to zip.
         /// </param>
         /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
+        [Obsolete("Use Zip(CrossPlatformZipSettings)")]
         public static void Zip(string zipFile, string path, int compressionLevel)
         {
-            Zip(zipFile, path, compressionLevel, IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix);
+            Zip(
+                new CrossPlatformZipSettings
+                    {
+                        Artifacts = path,
+                        ZipFile = zipFile,
+                        CompressionLevel = compressionLevel,
+                        TargetPlatform = IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix
+                });
         }
 
         /// <summary>
@@ -155,22 +164,44 @@
         /// <exception cref="System.IO.FileNotFoundException">
         /// No files found to zip at '{path}
         /// </exception>
+        [Obsolete("Use Zip(CrossPlatformZipSettings)")]
         public static void Zip(string zipFile, string path, int compressionLevel, ZipPlatform targetPlatform)
+        {
+            Zip(new CrossPlatformZipSettings
+                    {
+                        Artifacts = path,
+                        ZipFile = zipFile,
+                        CompressionLevel = compressionLevel,
+                        TargetPlatform = targetPlatform
+            });
+        }
+
+        /// <summary>
+        /// Zips the specified zip file, storing paths in the central directory appropriate for the target operating system.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <exception cref="ArgumentException">
+        /// 'Artifacts' cannot be null or empty - settings
+        /// or
+        /// 'ZipFile' cannot be null or empty - settings
+        /// </exception>
+        /// <exception cref="FileNotFoundException">No files found to zip at '{path}'</exception>
+        public static void Zip(CrossPlatformZipSettings settings)
         {
             List<FileSystemInfo> filesToZip;
             DirectoryInfo zipRoot;
 
-            if (string.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(settings.Artifacts))
             {
-                throw new ArgumentException("Value cannot be null or empty", nameof(path));
+                throw new ArgumentException("'Artifacts' cannot be null or empty", nameof(settings));
             }
 
-            if (string.IsNullOrWhiteSpace(zipFile))
+            if (string.IsNullOrWhiteSpace(settings.ZipFile))
             {
-                throw new ArgumentException("Value cannot be null or empty", nameof(zipFile));
+                throw new ArgumentException("'ZipFile' cannot be null or empty", nameof(settings));
             }
 
-            path = Path.GetFullPath(path.Trim());
+            var path = Path.GetFullPath(settings.Artifacts.Trim());
 
             if (Directory.Exists(path))
             {
@@ -179,6 +210,11 @@
                     .ToList();
 
                 zipRoot = new DirectoryInfo(path);
+            }
+            else if (!string.IsNullOrEmpty(settings.AlternateFileName))
+            {
+                ZipSingleFile(settings);
+                return;
             }
             else
             {
@@ -193,13 +229,13 @@
                 throw new FileNotFoundException($"No files found to zip at '{path}'");
             }
 
-            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(targetPlatform);
+            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(settings.TargetPlatform);
 
-            using (var archive = CreateZipFile(zipFile, compressionLevel, targetPlatform))
+            using (var archive = CreateZipFile(settings.ZipFile, settings.CompressionLevel, settings.TargetPlatform))
             {
                 foreach (var fso in filesToZip)
                 {
-                    AddSingleEntry(archive, fso, zipRoot, platformAttributes);
+                    AddSingleEntry(archive, fso, zipRoot, platformAttributes, settings.LogMessage, settings.LogError);
                 }
             }
         }
@@ -219,14 +255,18 @@
         /// Name of entry to create in zip directory, or if <c>null</c>, use the original file name.
         /// </param>
         /// <param name="compressionLevel">Compression level (0 = store, 9 = best)</param>
+        [Obsolete("Use ZipSingleFile(CrossPlatformZipSettings")]
         public static void ZipSingleFile(string zipFile, string filePath, string alternateName, int compressionLevel)
         {
             ZipSingleFile(
-                zipFile,
-                filePath,
-                alternateName,
-                compressionLevel,
-                IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix);
+                new CrossPlatformZipSettings
+                    {
+                        Artifacts = filePath,
+                        ZipFile = zipFile,
+                        AlternateFileName = alternateName,
+                        CompressionLevel = compressionLevel,
+                        TargetPlatform = IsWindows ? ZipPlatform.Windows : ZipPlatform.Unix
+                    });
         }
 
         /// <summary>
@@ -255,6 +295,7 @@
         /// <exception cref="System.IO.FileNotFoundException">
         /// File not found
         /// </exception>
+        [Obsolete("Use ZipSingleFile(CrossPlatformZipSettings")]
         public static void ZipSingleFile(
             string zipFile,
             string filePath,
@@ -262,59 +303,80 @@
             int compressionLevel,
             ZipPlatform targetPlatform)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                throw new ArgumentException("Value cannot be null or empty", nameof(filePath));
-            }
-
-            if (string.IsNullOrWhiteSpace(zipFile))
-            {
-                throw new ArgumentException("Value cannot be null or empty", nameof(zipFile));
-            }
-
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("File not found", filePath);
-            }
-
-            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(targetPlatform);
-
-            using (var archive = CreateZipFile(zipFile, compressionLevel, targetPlatform))
-            {
-                AddSingleEntry(
-                    archive,
-                    new FileInfo(filePath),
-                    // ReSharper disable once AssignNullToNotNullAttribute - should already have been verified
-                    new DirectoryInfo(Path.GetDirectoryName(filePath)),
-                    platformAttributes,
-                    alternateName);
-            }
+            ZipSingleFile(
+                new CrossPlatformZipSettings
+                    {
+                        Artifacts = filePath,
+                        ZipFile = zipFile,
+                        AlternateFileName = alternateName,
+                        CompressionLevel = compressionLevel,
+                        TargetPlatform = targetPlatform,
+                        LogMessage = Console.WriteLine,
+                        LogError = Console.Error.WriteLine
+                    });
         }
 
         /// <summary>
-        /// Adds an entry to the zip archive.
+        /// Zips a single file with optionally an alternate filename in the central directory entry.
+        ///     Useful for e.g. creating a Node JS AWS lambda package from a web packed project where the entry should be called
+        ///     <c>index.js</c>
         /// </summary>
-        /// <param name="archive">
-        /// The archive.
-        /// </param>
-        /// <param name="itemToAdd">
-        /// The item to add.
-        /// </param>
-        /// <param name="zipRoot">
-        /// The zip root.
-        /// </param>
-        /// <param name="platformAttributes">
-        /// The target platform.
-        /// </param>
-        /// <param name="alternateEntryName">
-        /// Name of entry to create in zip directory, or if <c>null</c>, use the original file
-        ///     name.
-        /// </param>
+        /// <param name="settings">The settings.</param>
+        /// <exception cref="ArgumentException">
+        /// 'Artifacts' cannot be null or empty - settings
+        /// or
+        /// 'ZipFile' cannot be null or empty - settings
+        /// </exception>
+        /// <exception cref="FileNotFoundException">File not found</exception>
+        public static void ZipSingleFile(CrossPlatformZipSettings settings)
+        {
+            if (string.IsNullOrWhiteSpace(settings.Artifacts))
+            {
+                throw new ArgumentException("'Artifacts' cannot be null or empty", nameof(settings));
+            }
+
+            if (string.IsNullOrWhiteSpace(settings.ZipFile))
+            {
+                throw new ArgumentException("'ZipFile' cannot be null or empty", nameof(settings));
+            }
+
+            if (!File.Exists(settings.Artifacts))
+            {
+                throw new FileNotFoundException("File not found", settings.Artifacts);
+            }
+
+            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(settings.TargetPlatform);
+
+            using (var archive = CreateZipFile(settings.ZipFile, settings.CompressionLevel, settings.TargetPlatform))
+            {
+                AddSingleEntry(
+                    archive,
+                    new FileInfo(settings.Artifacts),
+                    // ReSharper disable once AssignNullToNotNullAttribute - should already have been verified
+                    new DirectoryInfo(Path.GetDirectoryName(settings.Artifacts)),
+                    platformAttributes,
+                    settings.LogMessage,
+                    settings.LogError,
+                    settings.AlternateFileName);
+            }
+        }
+
+        /// <summary>Adds an entry to the zip archive.</summary>
+        /// <param name="archive">The archive.</param>
+        /// <param name="itemToAdd">The item to add.</param>
+        /// <param name="zipRoot">The zip root.</param>
+        /// <param name="platformAttributes">The target platform.</param>
+        /// <param name="logMessage">Sink for messages</param>
+        /// <param name="logError">Sink for errors</param>
+        /// <param name="alternateEntryName">Name of entry to create in zip directory, or if <c>null</c>, use the original file
+        ///   name.</param>
         private static void AddSingleEntry(
             ZipOutputStream archive,
             FileSystemInfo itemToAdd,
             DirectoryInfo zipRoot,
             IExternalAttributes platformAttributes,
+            Action<string> logMessage,
+            Action<string> logError,
             string alternateEntryName = null)
         {
             var isDirectory = itemToAdd is DirectoryInfo;
@@ -339,7 +401,7 @@
 
             if (Environment.UserInteractive)
             {
-                Console.WriteLine($"Adding {zipPath}");
+                logMessage($"Adding {zipPath}");
             }
 
             var entry = new ZipEntry(zipPath)

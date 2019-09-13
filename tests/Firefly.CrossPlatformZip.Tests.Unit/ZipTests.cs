@@ -29,7 +29,14 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, directoryToZip, 9, ZipPlatform.Unix);
+                Zipper.Zip(
+                    new CrossPlatformZipSettings
+                        {
+                            ZipFile = zipFile,
+                            Artifacts = directoryToZip,
+                            CompressionLevel = 9,
+                            TargetPlatform = ZipPlatform.Unix
+                        });
 
                 this.GetAllEntries(zipFile).Any(e => e.Contains("\\")).Should().BeFalse();
             }
@@ -45,7 +52,15 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, directoryToZip, 9, ZipPlatform.Windows);
+                Zipper.Zip(
+                    new CrossPlatformZipSettings
+                        {
+                            ZipFile = zipFile,
+                            Artifacts = directoryToZip,
+                            CompressionLevel = 9,
+                            TargetPlatform = ZipPlatform.Windows
+                        });
+
 
                 // this.GetAllEntries(zipFile).Any(e => e.Contains("\\")).Should().BeFalse();
             }
@@ -63,7 +78,14 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, directoryToZip, 9);
+                Zipper.Zip(
+                    new CrossPlatformZipSettings
+                        {
+                            ZipFile = zipFile,
+                            Artifacts = directoryToZip,
+                            CompressionLevel = 9,
+                        });
+
 
                 this.GetEntryCount(zipFile).Should().Be(expectedEntryCount);
             }
@@ -80,7 +102,15 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.Zip(zipFile, fileToZip, 9, ZipPlatform.Unix);
+                Zipper.Zip(
+                    new CrossPlatformZipSettings
+                        {
+                            ZipFile = zipFile,
+                            Artifacts = fileToZip,
+                            CompressionLevel = 9,
+                            TargetPlatform = ZipPlatform.Unix
+                        });
+
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
@@ -99,7 +129,15 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.ZipSingleFile(zipFile, fileToZip, null, 9);
+                Zipper.ZipSingleFile(
+                    new CrossPlatformZipSettings
+                        {
+                            ZipFile = zipFile,
+                            Artifacts = fileToZip,
+                            CompressionLevel = 9,
+                            TargetPlatform = ZipPlatform.Unix
+                        });
+
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
@@ -119,7 +157,14 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
             using (var zipFile = new TempFile("test.zip"))
             {
-                Zipper.ZipSingleFile(zipFile, fileToZip, expectedEntry, 9);
+                Zipper.ZipSingleFile(
+                    new CrossPlatformZipSettings
+                        {
+                            ZipFile = zipFile,
+                            Artifacts = fileToZip,
+                            CompressionLevel = 9,
+                            AlternateFileName = expectedEntry
+                        });
 
                 this.GetEntryCount(zipFile).Should().Be(1);
                 this.GetFirstEntryPath(zipFile).Should().Be(expectedEntry);
