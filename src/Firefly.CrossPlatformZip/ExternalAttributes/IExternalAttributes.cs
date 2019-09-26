@@ -25,7 +25,7 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
         char DirectorySeparator { get; }
 
         /// <summary>
-        ///     Gets the directory separator for foreign OS, e.g Windows separator on Posix and vice-versa.
+        ///     Gets the directory separator for foreign OS, e.g Windows separator on POSIX and vice-versa.
         /// </summary>
         /// <value>
         ///     The directory separator.

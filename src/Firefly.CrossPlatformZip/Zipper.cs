@@ -19,7 +19,7 @@
         /// <summary>
         ///     What OS is the running on?
         /// </summary>
-        private static readonly bool IsWindows = Path.DirectorySeparatorChar == '\\';
+        internal static readonly bool IsWindows = Path.DirectorySeparatorChar == '\\';
 
         /// <summary>
         /// Unzip a zip file, treating paths appropriately for the file system irrespective of path style in central directory.

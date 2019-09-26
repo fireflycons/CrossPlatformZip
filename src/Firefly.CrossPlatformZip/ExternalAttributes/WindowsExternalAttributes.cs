@@ -26,7 +26,7 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
         public char DirectorySeparator { get; } = '\\';
 
         /// <summary>
-        ///     Gets the directory separator for foreign OS, e.g Windows separator on Posix and vice-versa.
+        ///     Gets the directory separator for foreign OS, e.g Windows separator on POSIX and vice-versa.
         /// </summary>
         /// <value>
         ///     The directory separator.
@@ -44,7 +44,8 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
         /// </returns>
         public int GetExternalAttributes(FileSystemInfo fileSystemObject)
         {
-            return fileSystemObject is DirectoryInfo ? (int)FileAttributes.Directory : (int)File.GetAttributes(fileSystemObject.FullName);
+            // For now, if we are creating a zip targeting Windows from a Unix filesystem, just set file attribute to Archive.
+            return fileSystemObject is DirectoryInfo ? (int)FileAttributes.Directory : (Zipper.IsWindows ? (int)File.GetAttributes(fileSystemObject.FullName) : (int)FileAttributes.Archive);
         }
 
         /// <summary>
