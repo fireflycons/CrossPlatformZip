@@ -11,5 +11,5 @@ Reworked public interface to take a settings class as there were too many argume
 
 Basic implementataion of Unix Extra Fields in central directory entries of zips targeting unix-like operating systems.
 
-* Unix Extra type 3 (tag Id 0x7875) - Stores uid/gid 
-* Extended Timestamp (tag ID 0x5455)
+* Unix Extra type 3 (tag Id 0x7875) - Stores uid/gid. Presently this is set to 0/0 until netcore3.0 which suppots POSIX properly
+* Extended Timestamp (tag ID 0x5455) - Timestamps are stored but not yet restored by this unzip implementation.
