@@ -368,8 +368,7 @@
         /// <param name="platformAttributes">The target platform.</param>
         /// <param name="logMessage">Sink for messages</param>
         /// <param name="logError">Sink for errors</param>
-        /// <param name="alternateEntryName">Name of entry to create in zip directory, or if <c>null</c>, use the original file
-        ///   name.</param>
+        /// <param name="alternateEntryName">Name of entry to create in zip directory, or if <c>null</c>, use the original file name.</param>
         private static void AddSingleEntry(
             ZipOutputStream archive,
             FileSystemInfo itemToAdd,
