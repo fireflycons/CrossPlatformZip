@@ -5,7 +5,7 @@
     using System.IO;
     using System.Linq;
 
-    using Firefly.CrossPlatformZip.ExternalAttributes;
+    using Firefly.CrossPlatformZip.PlatformTraits;
     using Firefly.CrossPlatformZip.TaggedData;
 
     using ICSharpCode.SharpZipLib.Core;
@@ -229,13 +229,15 @@
                 throw new FileNotFoundException($"No files found to zip at '{path}'");
             }
 
-            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(settings.TargetPlatform);
+            var platformTraits = PlatformTraitsGeneratorFactory.GetPlatformTraits(settings.TargetPlatform);
+
+            platformTraits.PreValidateFileList(filesToZip);
 
             using (var archive = CreateZipFile(settings.ZipFile, settings.CompressionLevel, settings.TargetPlatform))
             {
                 foreach (var fso in filesToZip)
                 {
-                    AddSingleEntry(archive, fso, zipRoot, platformAttributes, settings.LogMessage, settings.LogError);
+                    AddSingleEntry(archive, fso, zipRoot, platformTraits, settings.LogMessage, settings.LogError);
                 }
             }
         }
@@ -345,7 +347,7 @@
                 throw new FileNotFoundException("File not found", settings.Artifacts);
             }
 
-            var platformAttributes = ExternalAttributeGeneratorFactory.GetExternalAttributesGenerator(settings.TargetPlatform);
+            var platformTraits = PlatformTraitsGeneratorFactory.GetPlatformTraits(settings.TargetPlatform);
 
             using (var archive = CreateZipFile(settings.ZipFile, settings.CompressionLevel, settings.TargetPlatform))
             {
@@ -354,7 +356,7 @@
                     new FileInfo(settings.Artifacts),
                     // ReSharper disable once AssignNullToNotNullAttribute - should already have been verified
                     new DirectoryInfo(Path.GetDirectoryName(settings.Artifacts)),
-                    platformAttributes,
+                    platformTraits,
                     settings.LogMessage,
                     settings.LogError,
                     settings.AlternateFileName);
@@ -365,7 +367,7 @@
         /// <param name="archive">The archive.</param>
         /// <param name="itemToAdd">The item to add.</param>
         /// <param name="zipRoot">The zip root.</param>
-        /// <param name="platformAttributes">The target platform.</param>
+        /// <param name="platformTraits">The target platform.</param>
         /// <param name="logMessage">Sink for messages</param>
         /// <param name="logError">Sink for errors</param>
         /// <param name="alternateEntryName">Name of entry to create in zip directory, or if <c>null</c>, use the original file name.</param>
@@ -373,7 +375,7 @@
             ZipOutputStream archive,
             FileSystemInfo itemToAdd,
             DirectoryInfo zipRoot,
-            IExternalAttributes platformAttributes,
+            IPlatformTraits platformTraits,
             Action<string> logMessage,
             Action<string> logError,
             string alternateEntryName = null)
@@ -391,11 +393,11 @@
             }
 
             // Compute path for central directory
-            var zipPath = relative.Replace(platformAttributes.ForeignDirectorySeparator, platformAttributes.DirectorySeparator).TrimEnd('\\', '/');
+            var zipPath = relative.Replace(platformTraits.ForeignDirectorySeparator, platformTraits.DirectorySeparator).TrimEnd('\\', '/');
 
             if (isDirectory)
             {
-                zipPath += platformAttributes.DirectorySeparator;
+                zipPath += platformTraits.DirectorySeparator;
             }
 
             if (Environment.UserInteractive)
@@ -405,8 +407,8 @@
 
             var entry = new ZipEntry(zipPath)
                             {
-                                ExternalFileAttributes = platformAttributes.GetExternalAttributes(itemToAdd),
-                                ExtraData = platformAttributes.GetExtraDataRecords(itemToAdd)
+                                ExternalFileAttributes = platformTraits.GetExternalAttributes(itemToAdd),
+                                ExtraData = platformTraits.GetExtraDataRecords(itemToAdd)
                             };
 
             archive.PutNextEntry(entry);

@@ -1,9 +1,9 @@
-﻿namespace Firefly.CrossPlatformZip.ExternalAttributes
+﻿namespace Firefly.CrossPlatformZip.PlatformTraits
 {
     /// <summary>
     ///     Factory to create the right sort of attribute generator
     /// </summary>
-    internal static class ExternalAttributeGeneratorFactory
+    internal static class PlatformTraitsGeneratorFactory
     {
         /// <summary>
         /// Gets the external attributes generator.
@@ -14,14 +14,14 @@
         /// <returns>
         /// External attribute generator interface
         /// </returns>
-        public static IExternalAttributes GetExternalAttributesGenerator(ZipPlatform targetPlatform)
+        public static IPlatformTraits GetPlatformTraits(ZipPlatform targetPlatform)
         {
             if (targetPlatform == ZipPlatform.Unix)
             {
-                return new PosixExternalAttributes();
+                return new PosixPlatformTraits();
             }
 
-            return new WindowsExternalAttributes();
+            return new WindowsPlatformTraits();
         }
     }
 }

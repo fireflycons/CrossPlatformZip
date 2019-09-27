@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PosixExternalAttributes.cs" company="">
+// <copyright file="PosixPlatformTraits.cs" company="">
 //   
 // </copyright>
 // <summary>
@@ -7,8 +7,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Firefly.CrossPlatformZip.ExternalAttributes
+namespace Firefly.CrossPlatformZip.PlatformTraits
 {
+    using System.Collections.Generic;
     using System.IO;
 
     using Firefly.CrossPlatformZip.TaggedData;
@@ -18,8 +19,8 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
     /// <summary>
     ///     Generate posix attributes for file system object
     /// </summary>
-    /// <seealso cref="Firefly.CrossPlatformZip.ExternalAttributes.IExternalAttributes" />
-    internal class PosixExternalAttributes : IExternalAttributes
+    /// <seealso cref="IPlatformTraits" />
+    internal class PosixPlatformTraits : IPlatformTraits
     {
         /// <summary>
         ///     Gets the platform-specific directory separator.
@@ -85,6 +86,15 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
                 zed.AddEntry(new UnixExtraType3 { Uid = 0, Gid = 0 });
                 return zed.GetEntryData();
             }
+        }
+
+        /// <summary>
+        /// Pre-validates a list of items to be zipped.
+        /// Currently nothing to do here.
+        /// </summary>
+        /// <param name="fileList">The file list.</param>
+        public void PreValidateFileList(IList<FileSystemInfo> fileList)
+        {
         }
     }
 }

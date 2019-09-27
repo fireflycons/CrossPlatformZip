@@ -1,21 +1,21 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WindowsExternalAttributes.cs" company="">
+// <copyright file="IPlatformTraits.cs" company="">
 //   
 // </copyright>
 // <summary>
-//   Generate Windows attributes for file system object
+//   Describes mechanism for generating ZIP external attributes field.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Firefly.CrossPlatformZip.ExternalAttributes
+namespace Firefly.CrossPlatformZip.PlatformTraits
 {
     using System.IO;
+    using System.Collections.Generic;
 
     /// <summary>
-    ///     Generate Windows attributes for file system object
+    ///     Describes mechanism for generating ZIP external attributes field.
     /// </summary>
-    /// <seealso cref="Firefly.CrossPlatformZip.ExternalAttributes.IExternalAttributes" />
-    internal class WindowsExternalAttributes : IExternalAttributes
+    internal interface IPlatformTraits
     {
         /// <summary>
         ///     Gets the platform-specific directory separator.
@@ -23,7 +23,7 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
         /// <value>
         ///     The directory separator.
         /// </value>
-        public char DirectorySeparator { get; } = '\\';
+        char DirectorySeparator { get; }
 
         /// <summary>
         ///     Gets the directory separator for foreign OS, e.g Windows separator on POSIX and vice-versa.
@@ -31,7 +31,7 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
         /// <value>
         ///     The directory separator.
         /// </value>
-        public char ForeignDirectorySeparator { get; } = '/';
+        char ForeignDirectorySeparator { get; }
 
         /// <summary>
         /// Gets the ZIP external attributes for the given file system object.
@@ -42,23 +42,20 @@ namespace Firefly.CrossPlatformZip.ExternalAttributes
         /// <returns>
         /// ZIP external attribute
         /// </returns>
-        public int GetExternalAttributes(FileSystemInfo fileSystemObject)
-        {
-            // For now, if we are creating a zip targeting Windows from a Unix filesystem, just set file attribute to Archive.
-            return fileSystemObject is DirectoryInfo ? (int)FileAttributes.Directory : (Zipper.IsWindows ? (int)File.GetAttributes(fileSystemObject.FullName) : (int)FileAttributes.Archive);
-        }
+        int GetExternalAttributes(FileSystemInfo fileSystemObject);
 
         /// <summary>
         /// Gets the extra data records (if any) to add to new entry.
         /// </summary>
         /// <param name="fileSystemObject">The file system object.</param>
-        /// <returns>
-        /// Byte array of raw extra data.
-        /// </returns>
-        public byte[] GetExtraDataRecords(FileSystemInfo fileSystemObject)
-        {
-            // Nothing for now
-            return null;
-        }
+        /// <returns>Byte array of raw extra data.</returns>
+        byte[] GetExtraDataRecords(FileSystemInfo fileSystemObject);
+
+        /// <summary>
+        /// Pre-validates a list of items to be zipped.
+        /// Throws if we should not continue.
+        /// </summary>
+        /// <param name="fileList">The file list.</param>
+        void PreValidateFileList(IList<FileSystemInfo> fileList);
     }
 }
