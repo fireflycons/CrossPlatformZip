@@ -3,7 +3,7 @@
 # publish to Nuget Gallery with this key
 environment:
   NUGET_API_KEY:
-    secure: Y6RtiPHso3IP4m2v+l+33xkxpiAsE7ZdmZZZzBf99ScIPEECURKw0nwxZGUhaj1L
+    secure: 5/QzeZBngyyV1TI/Kv5UP04yXIlI1MSnaYBJnu+oxO1m8+VMMfgrFf+YfOpqYfzY
 
 # Skip on updates to the readme.
 # We can force this by adding [skip ci] or [ci skip] anywhere in commit message
