@@ -2,7 +2,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/d2cpscmh141cy3wq?svg=true)](https://ci.appveyor.com/project/fireflycons/crossplatformzip)
 
-_This is pre-release software_. Expect bugs and breaking changes. It's only up on nuget because I need it as a dependency elsewhere.
+![Nuget](https://img.shields.io/nuget/v/Firefly.CrossPlatformZip)
 
 ## What it is
 
