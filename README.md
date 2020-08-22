@@ -36,6 +36,10 @@ This library when targeting Unix will add all files with permissions `-rwxrwxrwx
 
 This library is built on netstandard2.0.
 
+## API Documention
+
+API documention can be found [here](https://fireflycons.github.io/Firefly-CrossPlatformZip/api/index.html)
+
 ## Still to do
 
 * Ensure central directory content matches exactly those produced by Linux zip and Windows built-in zip in terms of local header fields
