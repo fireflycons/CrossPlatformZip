@@ -4,6 +4,8 @@
 
 ![Nuget](https://img.shields.io/nuget/v/Firefly.CrossPlatformZip)
 
+[Nuget Package](https://www.nuget.org/packages/Firefly.CrossPlatformZip/)
+
 ## What it is
 
 I've found, especially with AWS that it can be fussy about the format of the central directory of a zip file when unzipping on a platform other than that where the zip was created. For instance, a zip file created by Windows with Windows paths (backslash) in the central directory, when unzipped on Linux with certain unzip programs which truly honour the paths with the separator character so you end up with individual _files_ in the target directory rather than the expected directory structure, e.g
@@ -25,6 +27,8 @@ Essentially I am providing a very lightweight wrapper around [SharpZipLib](https
 ## Uses
 
 AWS lambda function code is executed on Amazon Linux instances, thus the uploaded zip file needs to have a unix format central directory which includes unix file permission attributes, or he lambda executor user cannot read the files. If you build your lambda functions on a Windows workstation, all windows zip utilities create zips with Windows central directories meaning that unzipping on unix-like systems can result in files with no permissions (to anyone but root).
+
+Include this as part of a deployment script for lambda and other cases where you're deploying from Windows to a Unix/Linux host.
 
 This library when targeting Unix will add all files with permissions `-rwxrwxrwx`.
 
