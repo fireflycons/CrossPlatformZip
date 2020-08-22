@@ -1,2 +1,4 @@
 - name: Index
   href: index.md
+- name: Zipping a Lambda
+  href: lambda.md

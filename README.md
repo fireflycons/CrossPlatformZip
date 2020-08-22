@@ -26,7 +26,7 @@ Essentially I am providing a very lightweight wrapper around [SharpZipLib](https
 
 ## Uses
 
-AWS lambda function code is executed on Amazon Linux instances, thus the uploaded zip file needs to have a unix format central directory which includes unix file permission attributes, or he lambda executor user cannot read the files. If you build your lambda functions on a Windows workstation, all windows zip utilities create zips with Windows central directories meaning that unzipping on unix-like systems can result in files with no permissions (to anyone but root).
+AWS lambda function code is executed on Amazon Linux instances, thus the uploaded zip file needs to have a unix format central directory which includes unix file permission attributes, or the lambda executor user cannot read the files. If you build your lambda functions on a Windows workstation, all windows zip utilities create zips with Windows central directories meaning that unzipping on unix-like systems can result in files with no permissions (to anyone but root).
 
 Include this as part of a deployment script for lambda and other cases where you're deploying from Windows to a Unix/Linux host.
 
@@ -39,6 +39,10 @@ This library is built on netstandard2.0.
 ## API Documention
 
 API documention can be found [here](https://fireflycons.github.io/Firefly-CrossPlatformZip/api/index.html)
+
+## Projects using this library
+
+* [PSCloudFormation](https://github.com/fireflycons/PSCloudFormation) - uses it to prepare AWS CloudFormation packages.
 
 ## Still to do
 
