@@ -31,6 +31,7 @@ Version buildVersion;
 DirectoryPath docFxSite;
 
 var solutionFile = File("../CrossPlatformZip.sln");
+var documentationPath = "Firefly-CrossPlatformZip";
 
 Task("Init")
     .Does(() => {
@@ -142,7 +143,7 @@ Task("CopyDocumentationTo-github.io-clone")
     .WithCriteria(isReleasePublication || !string.IsNullOrEmpty(EnvironmentVariable("FORCE_DOC_PUSH")))
     .Does(() => {
 
-        var outputDir = MakeAbsolute(Directory(System.IO.Path.Combine(EnvironmentVariableStrict("APPVEYOR_BUILD_FOLDER"), "..", "fireflycons.github.io", "Firefly-CloudFormation")));
+        var outputDir = MakeAbsolute(Directory(System.IO.Path.Combine(EnvironmentVariableStrict("APPVEYOR_BUILD_FOLDER"), "..", "fireflycons.github.io", documentationPath)));
 
         Information($"Updating documentation in {outputDir}");
 
