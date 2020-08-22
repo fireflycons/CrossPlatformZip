@@ -1,9 +1,5 @@
 # CrossPlatformZip
 
-[![Build status](https://ci.appveyor.com/api/projects/status/d2cpscmh141cy3wq?svg=true)](https://ci.appveyor.com/project/fireflycons/crossplatformzip)
-
-![Nuget](https://img.shields.io/nuget/v/Firefly.CrossPlatformZip)
-
 ## What it is
 
 I've found, especially with AWS that it can be fussy about the format of the central directory of a zip file when unzipping on a platform other than that where the zip was created. For instance, a zip file created by Windows with Windows paths (backslash) in the central directory, when unzipped on Linux with certain unzip programs which truly honour the paths with the separator character so you end up with individual _files_ in the target directory rather than the expected directory structure, e.g
@@ -31,11 +27,3 @@ This library when targeting Unix will add all files with permissions `-rwxrwxrwx
 ## .NET Framework Support
 
 This library is built on netstandard2.0.
-
-## Still to do
-
-* Ensure central directory content matches exactly those produced by Linux zip and Windows built-in zip in terms of local header fields
-* Honour extended field data
-    * Create for target OS - SharpZipLib doesn't support some unix fields.
-    * On extraction, map to target OS, i.e. Unix file times to NTFS
-* Option to store unix attributes as found in filesystem if I can find a working posix package.
