@@ -1,32 +1,33 @@
 ﻿namespace Firefly.CrossPlatformZip.Console
 {
     using System;
+    using System.IO;
+    using System.Runtime.InteropServices;
 
-    class Program
+    public class Program
     {
-        public static int Main(string[] args)
+        /// <summary>
+        /// Very simple interface to create a new zip file. 
+        /// </summary>
+        /// <param name="zipFile">Path to zip file to create</param>
+        /// <param name="platform">Target platform (default Unix if running on Windows, else Windows).</param>
+        /// <param name="level">Compression level (0-9, 0 = store, 9 = best, default 5)</param>
+        /// <param name="argument">Path to file or folder to zip</param>
+        /// <returns>Exit status</returns>
+        public static int Main(string zipFile, ZipPlatform? platform, int? level, FileSystemInfo argument)
         {
-            if (args.Length < 2)
-            {
-                Usage();
-                return 1;
-            }
-
-            var zipFile = args[0];
-            var path = args[1];
-
             try
             {
-                if (args.Length >= 3)
-                {
-                    var target = (ZipPlatform)Enum.Parse(typeof(ZipPlatform), args[2], true);
+                var compession = level ?? 5;
+                var defaultPlatform = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                                          ? ZipPlatform.Unix
+                                          : ZipPlatform.Windows;
 
-                    Zipper.Zip(zipFile, path, 9, target);
-                }
-                else
-                {
-                    Zipper.Zip(zipFile, path, 9);
-                }
+                Zipper.Zip(
+                    new CrossPlatformZipSettings
+                        {
+                            CompressionLevel = compession, Artifacts = argument.FullName, ZipFile = zipFile, TargetPlatform = platform ?? defaultPlatform
+                    });
             }
             catch (Exception e)
             {
@@ -35,12 +36,6 @@
             }
 
             return 0;
-        }
-
-        private static void Usage()
-        {
-            Console.WriteLine("Usage");
-            Console.WriteLine("CrossPlatformZip zipFile fileOrDirectory [windows/unix]");
         }
     }
 }

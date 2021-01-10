@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Added [DragonFruit Command Line Parser](https://github.com/dotnet/command-line-api) to the console application and [instructions to build it](https://fireflycons.github.io/Firefly-CrossPlatformZip/articles/command-line.html)
+
 ## 0.5.0
 
 * Refactor `ExternalAttributes` to be `Traits` since this is really what these classes represent.
@@ -5,7 +9,7 @@
 
 ## 0.4.1
 
-When adding files from a unix filesystem to a windows zip, store the MS-DOS attributes as Archive. 
+When adding files from a unix filesystem to a windows zip, store the MS-DOS attributes as Archive.
 Was previously trying to read attributes with `File.GetAttributes`, which does not return valid attributes as of netcore2.0
 
 ## 0.4.0

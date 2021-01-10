@@ -1,4 +1,6 @@
 - name: Index
   href: index.md
-- name: Zipping a Lambda
+- name: AWS Lambda
   href: lambda.md
+- name: Command Line Interface
+  href: command-line.md

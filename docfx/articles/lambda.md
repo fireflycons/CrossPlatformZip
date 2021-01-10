@@ -1,6 +1,6 @@
 # Zipping a Lambda
 
-Here we assume a javascript lambda that has had all its dependences bundled in with WebPack. We want to upload the package as `index.js`. Messages will be logged directly to console.
+Here we assume a javascript AWS lambda that has had all its dependences bundled in with WebPack. We want to upload the package as `index.js`. Messages will be logged directly to console.
 
 ```csharp
 var settings = new CrossPlatformZipSettings{
