@@ -1,3 +1,7 @@
+## 0.5.2
+
+* Enhancement - Add SourceLink support. [Issue link](https://github.com/fireflycons/CrossPlatformZip/issues/5)
+
 ## 0.5.1
 
 * Added [DragonFruit Command Line Parser](https://github.com/dotnet/command-line-api) to the console application and [instructions to build it](https://fireflycons.github.io/Firefly-CrossPlatformZip/articles/command-line.html)
