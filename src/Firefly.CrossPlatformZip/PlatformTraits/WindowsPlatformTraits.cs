@@ -14,64 +14,42 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
     using System.IO;
     using System.Linq;
 
+    using ICSharpCode.SharpZipLib.Zip;
+
     /// <summary>
     ///     Generate Windows attributes for file system object
     /// </summary>
     /// <seealso cref="IPlatformTraits" />
     internal class WindowsPlatformTraits : IPlatformTraits
     {
-        /// <summary>
-        ///     Gets the platform-specific directory separator.
-        /// </summary>
-        /// <value>
-        ///     The directory separator.
-        /// </value>
-        public char DirectorySeparator { get; } = '\\';
+        /// <inheritdoc />
+        public char DirectorySeparator => '\\';
 
-        /// <summary>
-        ///     Gets the directory separator for foreign OS, e.g Windows separator on POSIX and vice-versa.
-        /// </summary>
-        /// <value>
-        ///     The directory separator.
-        /// </value>
-        public char ForeignDirectorySeparator { get; } = '/';
+        /// <inheritdoc />
+        public char ForeignDirectorySeparator => '/';
 
-        /// <summary>
-        /// Gets the ZIP external attributes for the given file system object.
-        /// </summary>
-        /// <param name="fileSystemObject">
-        /// The file system object.
-        /// </param>
-        /// <returns>
-        /// ZIP external attribute
-        /// </returns>
+        /// <inheritdoc />
+        public int HostSystemId => (int)HostSystemID.WindowsNT;
+
+        /// <inheritdoc />
         public int GetExternalAttributes(FileSystemInfo fileSystemObject)
         {
             // For now, if we are creating a zip targeting Windows from a Unix filesystem, just set file attribute to Archive.
-            return fileSystemObject is DirectoryInfo ? (int)FileAttributes.Directory : (Zipper.IsWindows ? (int)File.GetAttributes(fileSystemObject.FullName) : (int)FileAttributes.Archive);
+            return fileSystemObject is DirectoryInfo
+                       ? (int)FileAttributes.Directory
+                       : Zipper.IsWindows
+                           ? (int)File.GetAttributes(fileSystemObject.FullName)
+                           : (int)FileAttributes.Archive;
         }
 
-        /// <summary>
-        /// Gets the extra data records (if any) to add to new entry.
-        /// </summary>
-        /// <param name="fileSystemObject">The file system object.</param>
-        /// <returns>
-        /// Byte array of raw extra data.
-        /// </returns>
+        /// <inheritdoc />
         public byte[] GetExtraDataRecords(FileSystemInfo fileSystemObject)
         {
             // Nothing for now
             return null;
         }
 
-        /// <summary>
-        /// Pre-validates a list of items to be zipped.
-        /// Throws if we should not continue.
-        /// </summary>
-        /// <param name="fileList">The file list.</param>
-        /// <remarks>
-        /// When creating a zip for Windows from Linux, we need to check that there are no case sensitivity issues with the input file list.
-        /// </remarks>
+        /// <inheritdoc />
         public void PreValidateFileList(IList<FileSystemInfo> fileList)
         {
             // Check files

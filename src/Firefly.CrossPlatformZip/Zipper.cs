@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
 
+    using Firefly.CrossPlatformZip.FileSystem;
     using Firefly.CrossPlatformZip.PlatformTraits;
     using Firefly.CrossPlatformZip.TaggedData;
 
@@ -17,9 +19,9 @@
     public class Zipper
     {
         /// <summary>
-        ///     What OS is the running on?
+        ///     What OS are we running on?
         /// </summary>
-        internal static readonly bool IsWindows = Path.DirectorySeparatorChar == '\\';
+        internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         /// <summary>
         /// Unzip a zip file, treating paths appropriately for the file system irrespective of path style in central directory.
@@ -206,7 +208,7 @@
             if (Directory.Exists(path))
             {
                 filesToZip = Directory.EnumerateFileSystemEntries(path, "*", SearchOption.AllDirectories).Select(
-                        f => (File.Exists(f) ? (FileSystemInfo)new FileInfo(f) : (FileSystemInfo)new DirectoryInfo(f)))
+                        f => File.Exists(f) ? new FileInfo(f) : (FileSystemInfo)new DirectoryInfo(f))
                     .ToList();
 
                 zipRoot = new DirectoryInfo(path);
@@ -408,20 +410,23 @@
             var entry = new ZipEntry(zipPath)
                             {
                                 ExternalFileAttributes = platformTraits.GetExternalAttributes(itemToAdd),
-                                ExtraData = platformTraits.GetExtraDataRecords(itemToAdd)
+                                ExtraData = platformTraits.GetExtraDataRecords(itemToAdd),
+                                HostSystem = platformTraits.HostSystemId
                             };
 
             archive.PutNextEntry(entry);
 
-            if (entry.IsFile)
+            if (!entry.IsFile)
             {
-                var buf = new byte[4096];
+                return;
+            }
 
-                // Add the file
-                using (var fs = File.OpenRead(itemToAdd.FullName))
-                {
-                    StreamUtils.Copy(fs, archive, buf);
-                }
+            var buf = new byte[4096];
+
+            // Add the file
+            using (var fs = File.OpenRead(itemToAdd.FullName))
+            {
+                StreamUtils.Copy(fs, archive, buf);
             }
         }
 

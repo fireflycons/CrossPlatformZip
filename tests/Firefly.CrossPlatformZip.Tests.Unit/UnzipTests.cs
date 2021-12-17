@@ -37,7 +37,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
                 .Count();
             var inputFiles = Directory.EnumerateFiles(directoryToZip, "*", SearchOption.AllDirectories).ToList();
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             using (var tempDir = new TempDirectory())
             {
                 // Generate zip for foreign platform

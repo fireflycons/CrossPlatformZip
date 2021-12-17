@@ -165,14 +165,14 @@ namespace Firefly.CrossPlatformZip.TaggedData
         /// </exception>
         public int ReadLEShort()
         {
-            int byteValue1 = this.stream.ReadByte();
+            var byteValue1 = this.stream.ReadByte();
 
             if (byteValue1 < 0)
             {
                 throw new EndOfStreamException();
             }
 
-            int byteValue2 = this.stream.ReadByte();
+            var byteValue2 = this.stream.ReadByte();
             if (byteValue2 < 0)
             {
                 throw new EndOfStreamException();
@@ -290,9 +290,9 @@ namespace Firefly.CrossPlatformZip.TaggedData
         /// </remarks>
         protected override void Dispose(bool disposing)
         {
-            Stream toClose = this.stream;
+            var toClose = this.stream;
             this.stream = null;
-            if (this.IsStreamOwner && (toClose != null))
+            if (this.IsStreamOwner && toClose != null)
             {
                 this.IsStreamOwner = false;
                 toClose.Dispose();

@@ -1,4 +1,4 @@
-﻿namespace Firefly.CrossPlatformZip
+﻿namespace Firefly.CrossPlatformZip.FileSystem
 {
     using System;
     using System.IO;
@@ -39,10 +39,19 @@
             return relativePath.Replace('/', Path.DirectorySeparatorChar);
         }
 
+        /// <summary>
+        /// Gets the POSIX attributes for this <see cref="FileSystemInfo"/>.
+        /// </summary>
+        /// <param name="self">This instance.</param>
+        /// <returns>A <see cref="PosixAttributes"/> object, which on Windows will be <see cref="PosixAttributes.AllForRoot"/></returns>
+        public static PosixAttributes GetPosixAttributes(this FileSystemInfo self)
+        {
+            return new PosixPermissionsParser(self, new PosixAttributesReader()).Parse();
+        }
+
         private static string GetPath(FileSystemInfo fsi)
         {
-            var d = fsi as DirectoryInfo;
-            return d == null ? fsi.FullName : d.FullName.TrimEnd('\\', '/') + Path.DirectorySeparatorChar;
+            return !(fsi is DirectoryInfo d) ? fsi.FullName : d.FullName.TrimEnd('\\', '/') + Path.DirectorySeparatorChar;
         }
 
     }

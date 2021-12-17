@@ -11,61 +11,58 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Runtime.InteropServices;
 
+    using Firefly.CrossPlatformZip.FileSystem;
     using Firefly.CrossPlatformZip.TaggedData;
 
     using ICSharpCode.SharpZipLib.Zip;
 
     /// <summary>
-    ///     Generate posix attributes for file system object
+    ///     Generate POSIX attributes for file system object
     /// </summary>
     /// <seealso cref="IPlatformTraits" />
     internal class PosixPlatformTraits : IPlatformTraits
     {
-        /// <summary>
-        ///     Gets the platform-specific directory separator.
-        /// </summary>
-        /// <value>
-        ///     The directory separator.
-        /// </value>
-        public char DirectorySeparator { get; } = '/';
+        /// <inheritdoc />
+        public char DirectorySeparator => '/';
 
-        /// <summary>
-        ///     Gets the directory separator for foreign OS, e.g Windows separator on POSIX and vice-versa.
-        /// </summary>
-        /// <value>
-        ///     The directory separator.
-        /// </value>
-        public char ForeignDirectorySeparator { get; } = '\\';
+        /// <inheritdoc />
+        public char ForeignDirectorySeparator => '\\';
 
-        /// <summary>
-        /// Gets the ZIP external attributes for the given file system object.
-        /// </summary>
-        /// <param name="fileSystemObject">
-        /// The file system object.
-        /// </param>
-        /// <returns>
-        /// ZIP external attribute
-        /// </returns>
+        /// <inheritdoc />
+        public int HostSystemId => (int)HostSystemID.Unix;
+
+        /// <inheritdoc />
         public int GetExternalAttributes(FileSystemInfo fileSystemObject)
         {
-            // For now, rwxrwxrwx
-            const int Attr = 0x1ff;
+            int attr;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // We are running on Windows, but creating for Linux
+                var isExecutable = false;
+
+                if (fileSystemObject is FileInfo fi)
+                {
+                    isExecutable = fi.IsExecutable();
+                }
+
+                // rwxrwxrwx | rw-rw-rw
+                attr = isExecutable ? 0x1ff : 0x1b6;
+            }
+            else
+            {
+                // We are running on Linux = read fs permissions directly.
+                attr = fileSystemObject.GetPosixAttributes().Attributes;
+            }
 
             return fileSystemObject is DirectoryInfo
-                       ? ((Attr | 0x4000) << 16) | (int)FileAttributes.Directory
-                       : (Attr | 0x8000) << 16;
+                       ? ((attr | 0x4000) << 16) | (int)FileAttributes.Directory
+                       : (attr | 0x8000) << 16;
         }
 
-        /// <summary>
-        /// Gets the extra data records (if any) to add to new entry.
-        /// </summary>
-        /// <param name="fileSystemObject">
-        /// The file system object.
-        /// </param>
-        /// <returns>
-        /// Byte array of raw extra data.
-        /// </returns>
+        /// <inheritdoc />
         public byte[] GetExtraDataRecords(FileSystemInfo fileSystemObject)
         {
             using (var zed = new ZipExtraData())
@@ -88,11 +85,7 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
             }
         }
 
-        /// <summary>
-        /// Pre-validates a list of items to be zipped.
-        /// Currently nothing to do here.
-        /// </summary>
-        /// <param name="fileList">The file list.</param>
+        /// <inheritdoc />
         public void PreValidateFileList(IList<FileSystemInfo> fileList)
         {
         }

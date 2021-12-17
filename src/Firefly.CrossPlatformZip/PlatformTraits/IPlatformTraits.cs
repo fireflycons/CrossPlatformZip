@@ -9,8 +9,8 @@
 
 namespace Firefly.CrossPlatformZip.PlatformTraits
 {
-    using System.IO;
     using System.Collections.Generic;
+    using System.IO;
 
     /// <summary>
     ///     Describes mechanism for generating ZIP external attributes field.
@@ -32,6 +32,14 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
         ///     The directory separator.
         /// </value>
         char ForeignDirectorySeparator { get; }
+
+        /// <summary>
+        /// Gets the host system identifier.
+        /// </summary>
+        /// <value>
+        /// The host system identifier.
+        /// </value>
+        int HostSystemId { get; }
 
         /// <summary>
         /// Gets the ZIP external attributes for the given file system object.

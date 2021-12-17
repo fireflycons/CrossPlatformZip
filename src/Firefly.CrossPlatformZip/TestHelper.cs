@@ -1,7 +1,11 @@
-﻿namespace Firefly.CrossPlatformZip
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Firefly.CrossPlatformZip.Tests.Unit")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+namespace Firefly.CrossPlatformZip
 {
     using System.IO;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Helper class to supply paths to files to zip

@@ -4,7 +4,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 {
     using System.IO;
 
-    using Firefly.CrossPlatformZip;
+    using Firefly.CrossPlatformZip.FileSystem;
 
     using FluentAssertions;
 

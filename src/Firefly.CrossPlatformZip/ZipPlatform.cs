@@ -1,8 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly:InternalsVisibleTo("Firefly.CrossPlatformZip.Tests.Unit")]
-
-namespace Firefly.CrossPlatformZip
+﻿namespace Firefly.CrossPlatformZip
 {
     /// <summary>
     /// Target platform for operations.
