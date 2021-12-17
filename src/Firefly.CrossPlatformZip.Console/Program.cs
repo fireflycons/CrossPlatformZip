@@ -4,6 +4,9 @@
     using System.IO;
     using System.Runtime.InteropServices;
 
+    /// <summary>
+    /// Program class
+    /// </summary>
     public class Program
     {
         /// <summary>
