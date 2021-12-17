@@ -8,18 +8,17 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
     using FluentAssertions;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Test relative path extension method
     /// </summary>
-    [TestClass]
     public class RelativePathTests
     {
         /// <summary>
         /// Given the path to a directory and path to file beneath this directory then correct relative path from is generated.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPathToDirectoryAndPathToFileBeneathThisDirectory_ThenCorrectRelativePathFromIsGenerated()
         {
             // Build paths with Path.Combine so tests work in Windows or Unix
@@ -35,7 +34,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Given the path to a directory and path to file not beneath this directory then correct relative path to is generated.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPathToDirectoryAndPathToFileNotBeneathThisDirectory_ThenCorrectRelativePathFromIsGenerated()
         {
             var dir = new DirectoryInfo(Path.DirectorySeparatorChar + "temp");
@@ -50,7 +49,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Given the path to a directory and path to file beneath this directory then correct relative path to is generated.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPathToDirectoryAndPathToFileBeneathThisDirectory_ThenCorrectRelativePathToIsGenerated()
         {
             // Build paths with Path.Combine so tests work in Windows or Unix
@@ -66,7 +65,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Given the path to a directory and path to file not beneath this directory then correct relative path to is generated.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPathToDirectoryAndPathToFileNotBeneathThisDirectory_ThenCorrectRelativePathToIsGenerated()
         {
             var dir = new DirectoryInfo(Path.DirectorySeparatorChar + "temp");
@@ -81,7 +80,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Relative path from and relative path to should gave same result when arguments reversed in the To call
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void RelativePathFrom_AndRelativePathTo_ShouldGenerateSamePathWhenArgumentsReversed()
         {
             var dir = new DirectoryInfo(Path.DirectorySeparatorChar + "temp");

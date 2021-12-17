@@ -9,12 +9,11 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
     using FluentAssertions;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Tests for traits classes
     /// </summary>
-    [TestClass]
     public class TraitsTests
     {
         /// <summary>
@@ -68,7 +67,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that directories with names differing only in case does not throw when the target is not Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPosixTraits_AndCaseSensitiveFileSystemWithDuplicateDirectories_ShouldNotThrow()
         {
             var traits = new PosixPlatformTraits();
@@ -81,7 +80,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that files with names differing only in case does not throw when the target is not Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPosixTraits_AndCaseSensitiveFileSystemWithDuplicateFiles_ShouldNotThrow()
         {
             var traits = new PosixPlatformTraits();
@@ -94,7 +93,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that duplicate files and directories does not throw when the target is not Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPosixTraits_AndCaseSensitiveFileSystemWithDuplicateFilesAndDirectories_ShouldNotThrow()
         {
             var traits = new PosixPlatformTraits();
@@ -107,7 +106,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that files with no duplicate names does not throw when the target is not Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenPosixTraits_AndCaseSensitiveFileSystemWithNoDuplicates_ShouldNotThrow()
         {
             var traits = new PosixPlatformTraits();
@@ -120,7 +119,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that directories with names differing only in case throws when the target is Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenWindowsTraits_AndCaseSensitiveFileSystemWithDuplicateDirectories_ShouldThrow()
         {
             var traits = new WindowsPlatformTraits();
@@ -133,7 +132,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that files with names differing only in case throws when the target is Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenWindowsTraits_AndCaseSensitiveFileSystemWithDuplicateFiles_ShouldThrow()
         {
             var traits = new WindowsPlatformTraits();
@@ -146,7 +145,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that duplicate files and directories throws when the target is Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenWindowsTraits_AndCaseSensitiveFileSystemWithDuplicateFilesAndDirectories_ShouldThrow()
         {
             var traits = new WindowsPlatformTraits();
@@ -159,7 +158,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Assert that files with no duplicate names does not throw when the target is Windows
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenWindowsTraits_AndCaseSensitiveFileSystemWithNoDuplicates_ShouldNotThrow()
         {
             var traits = new WindowsPlatformTraits();

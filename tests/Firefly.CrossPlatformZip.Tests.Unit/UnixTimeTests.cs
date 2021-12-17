@@ -4,18 +4,17 @@
 
     using FluentAssertions;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// The unix time tests.
     /// </summary>
-    [TestClass]
     public class UnixTimeTests
     {
         /// <summary>
         /// The convert date time to unix time and back gives input value.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ConvertDateTimeToUnixTimeAndBack_GivesInputValue()
         {
             var datetime = new DateTime(2038, 1, 1);

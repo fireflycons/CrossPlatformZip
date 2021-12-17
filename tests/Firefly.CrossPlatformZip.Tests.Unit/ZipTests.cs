@@ -11,18 +11,17 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
     using FluentAssertions;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Tests for zipping files
     /// </summary>
-    [TestClass]
     public class ZipTests
     {
         /// <summary>
         /// Given a directory, assert that all files and directories within are added with unix paths.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenADirectory_AndWeExplicityWantToCreateUnixArchive_ThenAllPathsWithinZipAreUnix()
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
@@ -45,7 +44,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Given a directory, assert that all files and directories within are added with unix paths.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenADirectory_AndWeExplicityWantToCreateWIndowsArchive_ThenAllPathsWithinZipAreWindows()
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
@@ -69,7 +68,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Given a directory, assert that all files and directories within are added recursively.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenADirectory_ThenAllFilesAndDirectoriesWithinAreAddedToZip()
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
@@ -94,7 +93,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// <summary>
         /// Given a single file and using <see cref="Zipper.Zip(CrossPlatformZipSettings)"/> method then it is added at the root of the central directory.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenASingleFile_AndUsingZipMethod_ThenItIsAddedAtTheRootOfTheCentralDirectory()
         {
             var fileToZip = TestHelper.GetZipModuleSourceFile();
@@ -121,7 +120,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// Given a single file and using <see cref="Zipper.ZipSingleFile(CrossPlatformZipSettings)"/> method with the alternate name argument = <c>null</c>
         /// then it is added at the root of the central directory.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenASingleFile_AndUsingZipSingleFileMethod_ThenItIsAddedAtTheRootOfTheCentralDirectory()
         {
             var fileToZip = TestHelper.GetZipModuleSourceFile();
@@ -148,7 +147,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// Given a single file and using <see cref="Zipper.ZipSingleFile(CrossPlatformZipSettings)"/> method with the alternate name argument not <c>null</c>
         /// then it is added at the root of the central directory with the alternate filename.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void
             GivenASingleFile_AndUsingZipSingleFileMethodWithAlternateName_ThenItIsAddedWithAlternateNameAtTheRootOfTheCentralDirectory()
         {

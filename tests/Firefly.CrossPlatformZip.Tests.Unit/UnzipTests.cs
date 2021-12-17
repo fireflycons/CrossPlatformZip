@@ -10,12 +10,11 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
 
     using FluentAssertions;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Unzip tests
     /// </summary>
-    [TestClass]
     public class UnzipTests
     {
         /// <summary>
@@ -27,7 +26,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         /// Test that if a zip is created for a foreign platform e.g. Windows and unzipped on Linux (and vice versa depending on where test is run)
         /// then file files are extracted correctly with no corruption.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GivenZipCreatedForForeignPlatform_ThenFilesExtractedCorrectlyAndAreNotCorrupted()
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
