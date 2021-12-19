@@ -123,7 +123,7 @@ if (-not [string]::IsNullOrEmpty($env:APPVEYOR_PULL_REQUEST_NUMBER))
 }
 
 # Chocolatey DocFX
-cinst docfx --version $env:DocFXVersion -y  --limit-output |
+cinst docfx -y  --limit-output |
 Foreach-Object {
     if ($_ -inotlike 'Progress*Saving*')
     {
