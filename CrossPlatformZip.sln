@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{12D664CB-5926-408E-8A5A-7AEB1FC8045B}"
 EndProject
@@ -12,11 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip.Tests.Unit", "tests\Firefly.CrossPlatformZip.Tests.Unit\Firefly.CrossPlatformZip.Tests.Unit.csproj", "{6C5B4A20-71F3-4CD2-89AD-5EF5D14F56CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{13439F9D-E52C-4618-93AC-2929E0BB7AC2}"
-	ProjectSection(SolutionItems) = preProject
-		build\build-helper.ps1 = build\build-helper.ps1
-		build\build.cake = build\build.cake
-		build\Set-BuildNumbers.ps1 = build\Set-BuildNumbers.ps1
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Firefly.CrossPlatformZip.Console", "src\Firefly.CrossPlatformZip.Console\Firefly.CrossPlatformZip.Console.csproj", "{FBDB72C2-3D57-451E-8699-5174E9B27B31}"
 EndProject

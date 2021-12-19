@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="./build/BuildSetup.props" />
+
+  <PropertyGroup>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <Owners>Alistair Mackay</Owners>
+    <Authors>Alistair Mackay</Authors>
+    <Company>Firefly IT Consulting</Company>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/fireflycons/CrossPlatformZip</PackageProjectUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <RepositoryUrl>https://github.com/fireflycons/CrossPlatformZip</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(DeployBuild)">
+    <DefineConstants>$(DefineConstants);DEPLOY_BUILD;</DefineConstants>
+  </PropertyGroup>
+</Project>

@@ -264,5 +264,6 @@ output/*
 build/tools/*
 tools/Cake.CoreCLR
 !build/tools/packages.config
+tools/
 
 test-output/

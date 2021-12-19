@@ -2,30 +2,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Cross platform ZIP/UNZIP package that can create/unzip archives for Windows or Unix/Linux</Description>
-    <Copyright>Copyright (c) 2019 Firefly Consulting Ltd.</Copyright>
+    <IsPackable>true</IsPackable>
+    <PackageId>Firefly.CrossPlatformZip</PackageId>
+    <GeneratePackageOnBuild>$(Generate_CrossPlatformZip)</GeneratePackageOnBuild>
+    <Title>Firefly.CrossPlatformZip</Title>
+
+    <!-- Overridden by CI -->
+    <Version>0.0.0</Version>
+    <AssemblyVersion>0.0.0</AssemblyVersion>
+    <FileVersion>0.0.0</FileVersion>
+
+    <Copyright>Copyright © 2021 Firefly IT Consulting Ltd.</Copyright>
+    <Description>
+.NET Library that creates ZIP files for an OS other than the one building the zip, e.g. create ZIP for Linux from a Windows machine.
+
+Supported platforms:
+- .NET Standard 2.0+
+
+Supports Source Link
+    </Description>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/fireflycons/CrossPlatformZip</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/fireflycons/CrossPlatformZip.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>archive,zip,crossplatform</PackageTags>
-    <Authors>Alistair Mackay</Authors>
-    <Company>Firefly IT Consulting</Company>
-    <Version>0.0.10</Version>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <FileVersion>0.0.10.0</FileVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
