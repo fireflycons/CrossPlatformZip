@@ -1,3 +1,7 @@
+## 0.6.0
+
+* Fix - File system permissions not correctly extracted on Linux. [Issue link](https://github.com/fireflycons/CrossPlatformZip/issues/7)
+
 ## 0.5.2
 
 * Enhancement - Add SourceLink support. [Issue link](https://github.com/fireflycons/CrossPlatformZip/issues/5)
