@@ -30,7 +30,12 @@ AWS lambda function code is executed on Amazon Linux instances, thus the uploade
 
 Include this as part of a deployment script for lambda and other cases where you're deploying from Windows to a Unix/Linux host.
 
-This library when targeting Unix will add all files with permissions `-rwxrwxrwx`.
+## POSIX Attribute support
+
+When creating a ZIP with `TargetPlatform.Unix` then the following logic applies.
+
+* If running on Windows, files are examined for being executable. Binary files are checked for an ELF header, and text files are checked for existence of a shebang. If either is true, the permissions `rwxrwxrwx` are stored in the zip, else `rw-rw-rw-`
+* If running on Linux, files are stored with the attributes as read from the file system.
 
 ## .NET Framework Support
 
@@ -48,6 +53,4 @@ API documention can be found [here](https://fireflycons.github.io/Firefly-CrossP
 
 * Ensure central directory content matches exactly those produced by Linux zip and Windows built-in zip in terms of local header fields
 * Honour extended field data
-    * Create for target OS - SharpZipLib doesn't support some unix fields.
     * On extraction, map to target OS, i.e. Unix file times to NTFS
-* Option to store unix attributes as found in filesystem if I can find a working posix package.
