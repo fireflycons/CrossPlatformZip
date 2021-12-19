@@ -26,7 +26,7 @@ skip_commits:
 environment:
   NUGET_API_KEY:
     secure: zq0+IBIITvBHIsVd7MmRQl09X2q4erMzK7LBi2UTpjNFgJeY/R+Krm4dZWAcb4E1
-  GITHUB_PAT:
+  GITHUB_ACCESS_TOKEN:
     secure: w8H/kYnxC0NVBLhm4uXSLNH110FtIAQ1COq0Wl5RgwDCG3apzXfSCEfJcwSc44QQ
   GITHUB_EMAIL:
     secure: CxOftS/5wmEkPCDl0O/KIiKlF4KhUnGD9436K/1iQwY3RkDMZRCkCEny+dG5zCS+
