@@ -407,10 +407,12 @@
                 logMessage($"Adding {zipPath}");
             }
 
+            var platformData = platformTraits.GetPlatformData(itemToAdd);
+
             var entry = new ZipEntry(zipPath)
                             {
-                                ExternalFileAttributes = platformTraits.GetExternalAttributes(itemToAdd),
-                                ExtraData = platformTraits.GetExtraDataRecords(itemToAdd),
+                                ExternalFileAttributes = platformData.Attributes,
+                                ExtraData = platformData.ExtraData,
                                 HostSystem = platformTraits.HostSystemId
                             };
 

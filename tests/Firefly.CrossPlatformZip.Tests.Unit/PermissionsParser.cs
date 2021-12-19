@@ -31,6 +31,8 @@
         [InlineData("-------rwx. 1 0 0 1360 Dec 30  2020 test.txt", "007", 0, 0)]
         [InlineData("-rw-r--r--. 1 0 0 1360 Dec 30  2020 test.txt", "644", 0, 0)]
         [InlineData("-rw-r--r--. 1 1000 2000 1360 Dec 30  2020 test.txt", "644", 1000, 2000)]
+        [InlineData("drwxr-xr-x  3 0 0    95 Aug 31  2020 .vs", "755", 0, 0)]
+        [InlineData("drwxr-xr-x 11 0 0 202 Apr 25  2021 build/tools/Addins/Newtonsoft.Json.12.0.3/lib/", "755", 0, 0)]
         public void ShouldCorrectlyParseLsOutput(
             string output,
             string expectedOctalAttributes,

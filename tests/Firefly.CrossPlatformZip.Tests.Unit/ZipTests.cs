@@ -2,6 +2,7 @@
 
 namespace Firefly.CrossPlatformZip.Tests.Unit
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.IO.Compression;
@@ -26,7 +27,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             {
                 Zipper.Zip(
                     new CrossPlatformZipSettings
@@ -49,7 +50,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
         {
             var directoryToZip = TestHelper.GetZipModuleSourceDirectory();
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             {
                 Zipper.Zip(
                     new CrossPlatformZipSettings
@@ -75,7 +76,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             var expectedEntryCount =
                 Directory.EnumerateFileSystemEntries(directoryToZip, "*", SearchOption.AllDirectories).Count();
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             {
                 Zipper.Zip(
                     new CrossPlatformZipSettings
@@ -99,7 +100,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             var fileToZip = TestHelper.GetZipModuleSourceFile();
             var expectedEntry = Path.GetFileName(fileToZip);
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             {
                 Zipper.Zip(
                     new CrossPlatformZipSettings
@@ -126,7 +127,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             var fileToZip = TestHelper.GetZipModuleSourceFile();
             var expectedEntry = Path.GetFileName(fileToZip);
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             {
                 Zipper.ZipSingleFile(
                     new CrossPlatformZipSettings
@@ -154,7 +155,7 @@ namespace Firefly.CrossPlatformZip.Tests.Unit
             var fileToZip = TestHelper.GetZipModuleSourceFile();
             var expectedEntry = "index.js";
 
-            using (var zipFile = new TempFile("test.zip"))
+            using (var zipFile = new TempFile($"test-{Guid.NewGuid()}.zip"))
             {
                 Zipper.ZipSingleFile(
                     new CrossPlatformZipSettings

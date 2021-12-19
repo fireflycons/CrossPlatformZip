@@ -20,12 +20,12 @@ namespace Firefly.CrossPlatformZip.TaggedData
     internal class UnixExtraType3 : ITaggedData
     {
         /// <summary>
-        /// The gid size.
+        /// The group ID size.
         /// </summary>
         private int gidSize = 4;
 
         /// <summary>
-        /// The uid size.
+        /// The user ID size.
         /// </summary>
         private int uidSize = 4;
 
@@ -35,17 +35,17 @@ namespace Firefly.CrossPlatformZip.TaggedData
         private int version = 1;
 
         /// <summary>
-        /// Gets or sets the gid.
+        /// Gets or sets the group ID.
         /// </summary>
         public int Gid { get; set; }
 
         /// <summary>
         /// Gets the tag id.
         /// </summary>
-        public short TagID { get; } = 0x7875;
+        public short TagID => 0x7875;
 
         /// <summary>
-        /// Gets or sets the uid.
+        /// Gets or sets the user ID.
         /// </summary>
         public int Uid { get; set; }
 

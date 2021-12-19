@@ -42,28 +42,17 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
         int HostSystemId { get; }
 
         /// <summary>
-        /// Gets the ZIP external attributes for the given file system object.
-        /// </summary>
-        /// <param name="fileSystemObject">
-        /// The file system object.
-        /// </param>
-        /// <returns>
-        /// ZIP external attribute
-        /// </returns>
-        int GetExternalAttributes(FileSystemInfo fileSystemObject);
-
-        /// <summary>
-        /// Gets the extra data records (if any) to add to new entry.
-        /// </summary>
-        /// <param name="fileSystemObject">The file system object.</param>
-        /// <returns>Byte array of raw extra data.</returns>
-        byte[] GetExtraDataRecords(FileSystemInfo fileSystemObject);
-
-        /// <summary>
         /// Pre-validates a list of items to be zipped.
         /// Throws if we should not continue.
         /// </summary>
         /// <param name="fileList">The file list.</param>
         void PreValidateFileList(IList<FileSystemInfo> fileList);
+
+        /// <summary>
+        /// Gets the platform specific zip entry data.
+        /// </summary>
+        /// <param name="fileSystemObject">The file system object.</param>
+        /// <returns>A <see cref="PlatformData"/> object.</returns>
+        PlatformData GetPlatformData(FileSystemInfo fileSystemObject);
     }
 }

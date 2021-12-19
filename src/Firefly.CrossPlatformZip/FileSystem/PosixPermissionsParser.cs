@@ -11,8 +11,8 @@
         /// <summary>
         /// Regex to parse output of ls
         /// </summary>
-        private static readonly Regex FileListOutputRegex =
-            new Regex(@"^[dls\-](?<fileattr>[rwx\-]{9}).\s\d+\s(?<uid>\d+)\s(?<gid>\d+)");
+        public static readonly Regex FileListOutputRegex =
+            new Regex(@"^[dls\-](?<fileattr>[rwx\-]{9}).?\s*\d+\s+(?<uid>\d+)\s+(?<gid>\d+)");
 
 
         /// <summary>

@@ -29,25 +29,7 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
         public char ForeignDirectorySeparator => '/';
 
         /// <inheritdoc />
-        public int HostSystemId => (int)HostSystemID.WindowsNT;
-
-        /// <inheritdoc />
-        public int GetExternalAttributes(FileSystemInfo fileSystemObject)
-        {
-            // For now, if we are creating a zip targeting Windows from a Unix filesystem, just set file attribute to Archive.
-            return fileSystemObject is DirectoryInfo
-                       ? (int)FileAttributes.Directory
-                       : Zipper.IsWindows
-                           ? (int)File.GetAttributes(fileSystemObject.FullName)
-                           : (int)FileAttributes.Archive;
-        }
-
-        /// <inheritdoc />
-        public byte[] GetExtraDataRecords(FileSystemInfo fileSystemObject)
-        {
-            // Nothing for now
-            return null;
-        }
+        public int HostSystemId => (int)HostSystemID.Msdos;
 
         /// <inheritdoc />
         public void PreValidateFileList(IList<FileSystemInfo> fileList)
@@ -80,6 +62,17 @@ namespace Firefly.CrossPlatformZip.PlatformTraits
                           DuplicateDirectories
                               = duplicateDirectories
                       };
+        }
+
+        /// <inheritdoc />
+        public PlatformData GetPlatformData(FileSystemInfo fileSystemObject)
+        {
+            return new PlatformData
+                       {
+                           Attributes =
+                               fileSystemObject is DirectoryInfo ? (int)FileAttributes.Directory : 0,
+                           ExtraData = null
+                       };
         }
     }
 }

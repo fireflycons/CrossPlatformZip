@@ -21,12 +21,17 @@
             string output = null;
 
             // Escape spaces in paths
-            var path = file.FullName.Replace(" ", @"\ ");
+            var path = file.FullName;
+
+            if (path.Contains(" "))
+            {
+                path = $"\"{path}\"";
+            }
 
             var startInfo = new ProcessStartInfo
                                 {
                                     FileName = "ls",
-                                    Arguments = $"-ln {path}",
+                                    Arguments = $"-lnd {path}",
                                     CreateNoWindow = true,
                                     UseShellExecute = false,
                                     RedirectStandardOutput = true,
@@ -37,17 +42,24 @@
             {
                 process.OutputDataReceived += (sender, e) =>
                     {
-                        if (!string.IsNullOrEmpty(e.Data))
+                        if (!string.IsNullOrEmpty(e.Data) && PosixPermissionsParser.FileListOutputRegex.IsMatch(e.Data))
+                        {
+                            output = e.Data;
+                        }
+                    };
+
+                // Seems ls can also write the result to the error stream
+                process.ErrorDataReceived += (sender, e) =>
+                    {
+                        if (!string.IsNullOrEmpty(e.Data) && PosixPermissionsParser.FileListOutputRegex.IsMatch(e.Data))
                         {
                             output = e.Data;
                         }
                     };
 
                 process.Start();
-
-                // Asynchronously read the standard output of the spawned process.
-                // This raises OutputDataReceived events for each line of output.
                 process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
                 process.WaitForExit();
 
                 return process.ExitCode != 0 ? null : output;
