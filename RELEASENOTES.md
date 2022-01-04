@@ -1,3 +1,7 @@
+## 0.6.1
+
+* No functional change. Documentation site update only.
+
 ## 0.6.0
 
 * Fix - File system permissions not correctly extracted on Linux. [Issue link](https://github.com/fireflycons/CrossPlatformZip/issues/7)
